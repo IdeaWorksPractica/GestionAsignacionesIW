@@ -1,0 +1,85 @@
+.sideBar {
+  background-color: #444444;
+  width: 228px;
+  height: 100vh;
+  position: fixed;
+  padding: 10px;
+  color: #ffff;
+}
+.drawerBar {
+  background-color: #444444 !important;
+  color: #ffff;
+}
+.ant-drawer-content-wrapper {
+  width: 70% !important;
+}
+.renderSection {
+  width: 100%;
+  height: 100vh;
+  margin-left: 228px;
+}
+.info-sideBar {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.opt-section {
+  width: 100%;
+  height: 60%;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+.option{
+    text-align: center;
+    width: 90%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 10px;
+}
+.option:hover{
+    color: #444444;
+    background-color: #d9d9d9;    
+    font-weight: bolder;
+}
+.opt-container {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.btn-logout-container {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.info-sideBar > img {
+  width: 60%;
+}
+.info-sideBar > p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@media (max-width: 580px) {
+  .sideBar {
+    display: none;
+  }
+  .renderSection {
+    margin-left: 0;
+  }
+}
+@media (min-width: 580px) {
+  .mobile-menu-button {
+    display: none;
+  }
+  .btn-close-offcanvas {
+    position: absolute;
+    right: 1%;
+  }
+}
