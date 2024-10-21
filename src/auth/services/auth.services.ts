@@ -2,6 +2,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   onAuthStateChanged,
+  signOut,
   User
 } from "firebase/auth";
 import {
@@ -228,4 +229,15 @@ const getInfoUser = async (): Promise<IUser | null> => {
   });
 };
 
-export { login, forgotPassword, checkActiveSession, getInfoUser};
+const logout = async (): Promise<string | null> => {
+  try {
+    await signOut(auth);
+    return null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return "An unexpected error occurred";
+  }
+};
+export { login, logout, forgotPassword, checkActiveSession, getInfoUser};

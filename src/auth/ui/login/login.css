@@ -67,13 +67,16 @@
 }
 
 @media (max-width: 480px) {
+  .main-container-login{
+    background-color: #000000c4;
+  }
   .form-login {
     padding: 1.2rem;
     color: #0000 !important;
     border-radius: 0;
     height: auto;
     width: 100%;
-    background-color: #fff;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,20 +86,27 @@
   }
   .form-login > p {
     font-size: 1.5rem;
-    color: black !important;
+    color: #fff!important;
+    letter-spacing: 5px;
   }
-
+  .input-container{
+    margin-bottom: 4rem!important;
+  }
   .input-container > input {
     padding: 7px;
     font-size: 1.2rem;
+    background-color: transparent;
+    border-bottom: solid 3px white!important;
+    border-radius: 0!important;
   }
   .input-container > span {
     font-size: 1.2rem;
-    color: black !important;
+    color: #fff!important;
   }
   .input-container > label {
     font-size: 1.2rem;
-    color: black !important;
+    letter-spacing: 2px;
+    color: #fff!important;
   }
   .btn-login {
     font-weight: bold;
@@ -105,4 +115,11 @@
     font-size: 1.2rem;
     padding: 0.8rem 1.5rem 0.8rem 1.5rem;
   }
+  .password-forget {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-top: 1.2rem;
+    text-align: end;
+    font-weight:normal;
+}
 }

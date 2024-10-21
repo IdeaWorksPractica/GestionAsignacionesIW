@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { IUser } from "../../../shared/models/IUsuario";
 import { Drawer, Button, Spin } from "antd";
-import { getInfoUser } from "../../../auth/services/auth.services";
+import { getInfoUser, logout } from "../../../auth/services/auth.services";
 import { MenuOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import "./home.css";
 
 export const Home = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -21,6 +23,16 @@ export const Home = () => {
 
     fetchUserData();
   }, []);
+
+  const logOut = async () =>{
+  try {
+    await logout();
+    navigate('/');
+  } catch (error) {
+    console.log(error);
+  }
+
+  }
 
   const showDrawer = () => {
     setVisible(true);
@@ -57,13 +69,11 @@ export const Home = () => {
                 <p className="option">Gestion de áreas</p>
                 <p className="option">Asignaciones</p>
                 <p className="option">Registrar Usuarios</p>
-                <p className="option"></p>
+             
                 </div>
                 <div className="btn-logout-container">
-                    <p className="option">Cerrar sesión</p>
+                    <p onClick={logOut} className="option">Cerrar sesión</p>
                 </div>
-                
-                
               </div>
             </section>
             <section className="renderSection">
@@ -104,6 +114,7 @@ export const Home = () => {
           >
             <div className="sidebar-content">
               <div className="info-sideBar">
+                <section className="section-btn-drawer">
                 <button
                   onClick={closeDrawer}
                   className="btn btn-close-offcanvas"
@@ -125,10 +136,23 @@ export const Home = () => {
                     <path d="M6 6l12 12" />
                   </svg>
                 </button>
-                <img src="./logoIW.png" alt="logoIW" />
-                <p>{userData ? userData.nombre : "Nombre Usuario"}</p>{" "}
+                </section>
+                <section className="section-logo-drawer">
+                  <img src="./logoIW.png" alt="logoIW" />
+                  <p>{userData ? userData.nombre : "Nombre Usuario"}</p>{" "}
+                </section> 
               </div>
-              <div className="w-100 h-75"></div>
+              <div className="opt-section">
+                <div className="opt-container">
+                <p className="option">Gestion de áreas</p>
+                <p className="option">Asignaciones</p>
+                <p className="option">Registrar Usuarios</p>
+             
+                </div>
+                <div className="btn-logout-container">
+                    <p onClick={logOut} className="option">Cerrar sesión</p>
+                </div>
+              </div>
             </div>
           </Drawer>
         </>

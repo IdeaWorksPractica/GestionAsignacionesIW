@@ -3,6 +3,7 @@ import "./login.css";
 import { login, forgotPassword } from "../../services/auth.services";
 import { Spin, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 // Crear el ícono blanco para usar en el spinner
 const antIcon = <LoadingOutlined style={{ fontSize: 24, color: "white" }} spin />;
@@ -33,6 +34,7 @@ const showNotification = ({
 };
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,6 @@ export const Login = () => {
     setPassword(e.target.value);
   };
 
-  // Mostrar alerta si los campos están vacíos
   const handleForgotPassword = async () => {
     if (!email) {
       showNotification({
@@ -91,15 +92,17 @@ export const Login = () => {
       return;
     }
 
-    setLoading(true); // Activar el spinner mientras se espera la respuesta
+    setLoading(true); 
 
     try {
       const response = await login(email, password);
-      console.log("Respuesta de login:", response);
+      if(response.authenticated){
+        navigate('/home');
+      }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
     } finally {
-      setLoading(false); // Desactivar el spinner después de obtener la respuesta
+      setLoading(false); 
     }
   };
 
@@ -114,7 +117,7 @@ export const Login = () => {
           <input
             type="text"
             value={email}
-            onChange={handleEmailChange} // Maneja el cambio del input
+            onChange={handleEmailChange}
           />
         </div>
 
@@ -123,7 +126,7 @@ export const Login = () => {
           <input
             type="password"
             value={password}
-            onChange={handlePasswordChange} // Maneja el cambio del input
+            onChange={handlePasswordChange}
           />
           <span className="password-forget" onClick={handleForgotPassword}>
             Olvidaste tu contraseña?
@@ -132,7 +135,7 @@ export const Login = () => {
 
         <div className="mt-4">
           <button className="btn-login" onClick={handleSubmit} disabled={loading}>
-            {loading ? <Spin indicator={antIcon} /> : "Iniciar sesión"} {/* Mostrar el spinner blanco */}
+            {loading ? <Spin indicator={antIcon} /> : "Iniciar sesión"}
           </button>
         </div>
       </section>
