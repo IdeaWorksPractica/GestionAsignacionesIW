@@ -30,18 +30,28 @@
   width: 90%;
   margin-bottom: 1rem;
 }
-.input-container > input {
+.input-container > input, 
+.password-input {
   color: #fff;
   border-radius: 7px;
   padding: 5px;
   border: none;
   background-color: #999999;
 }
+
 .input-container > input:hover {
-  outline: #aa56a7;
+  outline: none!important;
+}
+.password-input:hover{
+  border: none;
+  outline: none!important;
+}
+.password-input:focus{
+  border: none;
+  outline: none!important;
 }
 .input-container > input:focus {
-  outline: #aa56a7;
+  outline: none!important;
 }
 
 .password-forget {
@@ -92,10 +102,13 @@
   .input-container{
     margin-bottom: 4rem!important;
   }
-  .input-container > input {
+  .input-container > input, 
+  .password-input {
+    margin-top: 5px;
+    margin-left: 10px;
     padding: 7px;
     font-size: 1.2rem;
-    background-color: transparent;
+    background-color: transparent!important;
     border-bottom: solid 3px white!important;
     border-radius: 0!important;
   }
@@ -122,4 +135,29 @@
     text-align: end;
     font-weight:normal;
 }
+}
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding-right: 40px; /* Para dar espacio al botón */
+  color: #fff;
+  border-radius: 7px;
+  padding: 5px;
+  border: none;
+  background-color: #999999;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
 }

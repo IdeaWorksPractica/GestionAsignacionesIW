@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./login.css";
 import { login, forgotPassword } from "../../services/auth.services";
-import { Spin, notification } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, notification } from "antd"; // Mantener Spin y Notification
+import { LoadingOutlined, EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons"; // Importar iconos
 import { useNavigate } from "react-router-dom";
 
 // Crear el ícono blanco para usar en el spinner
@@ -38,6 +38,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
 
   const handleEmailChange = (e: { target: { value: React.SetStateAction<string> } }) => {
     setEmail(e.target.value);
@@ -92,18 +93,22 @@ export const Login = () => {
       return;
     }
 
-    setLoading(true); 
+    setLoading(true);
 
     try {
       const response = await login(email, password);
-      if(response.authenticated){
-        navigate('/home');
+      if (response.authenticated) {
+        navigate("/home");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -123,11 +128,17 @@ export const Login = () => {
 
         <div className="input-container">
           <label>Contraseña</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+          <div className="password-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={handlePasswordChange}
+              className="password-input"
+            />
+            <button type="button" onClick={togglePasswordVisibility} className="password-toggle">
+              {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+            </button>
+          </div>
           <span className="password-forget" onClick={handleForgotPassword}>
             Olvidaste tu contraseña?
           </span>
