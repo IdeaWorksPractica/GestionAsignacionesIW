@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { IUser } from "../../shared/models/IUsuario";
+import { IPuestoTrabajo } from "../../shared/models/AdminModels";
 import { notification } from "antd";
 
 export interface AuthResponse {
@@ -207,7 +208,24 @@ const checkActiveSession = (): Promise<User | null> => {
   });
 };
 
-const getInfoUser = async (): Promise<IUser | null> => {
+const getPuestoTrabajoById = async (puestoTrabajoId: string): Promise<IPuestoTrabajo | null> => {
+  try {
+    const cargosCollectionRef = collection(db, "cargos");
+    const q = query(cargosCollectionRef, where("id", "==", puestoTrabajoId), limit(1));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].data() as IPuestoTrabajo;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al obtener el puesto de trabajo:", error);
+    return null;
+  }
+};
+
+const getInfoUser = async (): Promise<IUser & { puestoTrabajoDetalle?: IPuestoTrabajo } | null> => {
   return new Promise((resolve, reject) => {
     onAuthStateChanged(auth, async (user) => {
       if (user && user.email) {
@@ -215,7 +233,15 @@ const getInfoUser = async (): Promise<IUser | null> => {
           const userSnapshot = await getUserByEmail(user.email);
           if (userSnapshot) {
             const userData = userSnapshot.data() as IUser;
-            resolve(userData);
+
+            // Obtén toda la información del puesto de trabajo
+            const puestoTrabajoData = await getPuestoTrabajoById(userData.puestoTrabajo);
+            if (puestoTrabajoData) {
+              // Devuelve userData con la información adicional de puestoTrabajoDetalle
+              resolve({ ...userData, puestoTrabajoDetalle: puestoTrabajoData });
+            } else {
+              resolve(userData);
+            }
           } else {
             resolve(null);
           }
@@ -228,6 +254,7 @@ const getInfoUser = async (): Promise<IUser | null> => {
     });
   });
 };
+
 
 const logout = async (): Promise<string | null> => {
   try {

@@ -17,6 +17,7 @@ export const Home = () => {
       const user = await getInfoUser();
       if (user) {
         setUserData(user);
+        console.log(user)
       }
       setLoading(false);
     };
@@ -68,7 +69,7 @@ export const Home = () => {
                 <div className="opt-container">
                 <p className="option">Gestion de áreas</p>
                 <p className="option">Asignaciones</p>
-                <p className="option">Registrar Usuarios</p>
+                <p className="option">Usuarios</p>
              
                 </div>
                 <div className="btn-logout-container">
@@ -146,7 +147,7 @@ export const Home = () => {
                 <div className="opt-container">
                 <p className="option">Gestion de áreas</p>
                 <p className="option">Asignaciones</p>
-                <p className="option">Registrar Usuarios</p>
+                <p className="option">Usuarios</p>
              
                 </div>
                 <div className="btn-logout-container">
