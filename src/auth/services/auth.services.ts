@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -71,7 +72,6 @@ const login = async (
         });
       }
     }
-
     return {
       authenticated: true,
       error: null,
@@ -233,11 +233,8 @@ const getInfoUser = async (): Promise<IUser & { puestoTrabajoDetalle?: IPuestoTr
           const userSnapshot = await getUserByEmail(user.email);
           if (userSnapshot) {
             const userData = userSnapshot.data() as IUser;
-
-            // Obtén toda la información del puesto de trabajo
             const puestoTrabajoData = await getPuestoTrabajoById(userData.puestoTrabajo);
             if (puestoTrabajoData) {
-              // Devuelve userData con la información adicional de puestoTrabajoDetalle
               resolve({ ...userData, puestoTrabajoDetalle: puestoTrabajoData });
             } else {
               resolve(userData);

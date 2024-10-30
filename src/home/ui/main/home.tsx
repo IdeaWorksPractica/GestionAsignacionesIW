@@ -11,17 +11,17 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [userData, setUserData] = useState<IUser | null>(null);
+  const [userRol, setRol] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getInfoUser();
       if (user) {
         setUserData(user);
-        console.log(user)
+        setRol(user.puestoTrabajoDetalle?.rol ?? '');
       }
       setLoading(false);
     };
-
     fetchUserData();
   }, []);
 
