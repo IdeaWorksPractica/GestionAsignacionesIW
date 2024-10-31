@@ -3,22 +3,22 @@ import { IUser } from "../../../shared/models/IUsuario";
 import { Drawer, Button, Spin } from "antd";
 import { getInfoUser, logout } from "../../../auth/services/auth.services";
 import { MenuOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, useLocation, To } from "react-router-dom";
 import "./home.css";
-
 export const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [userRol, setRol] = useState('');
+  const [userRol, setRol] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getInfoUser();
       if (user) {
         setUserData(user);
-        setRol(user.puestoTrabajoDetalle?.rol ?? '');
+        setRol(user.puestoTrabajoDetalle?.rol ?? "");
       }
       setLoading(false);
     };
@@ -28,11 +28,11 @@ export const Home = () => {
   const logOut = async () => {
     try {
       await logout();
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const showDrawer = () => {
     setVisible(true);
@@ -40,6 +40,11 @@ export const Home = () => {
 
   const closeDrawer = () => {
     setVisible(false);
+  };
+
+  const handleNavigation = (path: To) => {
+    navigate(path);
+    setVisible(false); 
   };
 
   return (
@@ -61,47 +66,56 @@ export const Home = () => {
           <main className="d-flex">
             <section className="sideBar">
               <div className="info-sideBar">
-                <img src="./logoIW.png" alt="logoIW" />
+                <img src="/logoIW.png" alt="logoIW" />
                 <p>{userData ? userData.nombre : "Nombre Usuario"}</p>
               </div>
               <div className="opt-section">
-                {(userRol === 'Jefe' || userRol === 'Admin') && (
+                {(userRol === "Jefe" || userRol === "Admin") && (
                   <div className="opt-container">
-                    <p className="option">Gestión de áreas</p>
-                    <p className="option">Asignaciones</p>
-                    <p className="option">Usuarios</p>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/admin-areas" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/admin-areas")}
+                    >
+                      Gestión de áreas
+                    </button>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/asignaciones" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
+                    </button>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/admin-usuarios" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/admin-usuarios")}
+                    >
+                      Usuarios
+                    </button>
                   </div>
                 )}
                 <div className="btn-logout-container">
-                  <p onClick={logOut} className="option">Cerrar sesión</p>
+                  <button onClick={logOut} className="option">
+                    Cerrar sesión
+                  </button>
                 </div>
               </div>
             </section>
             <section className="renderSection">
+              <div className="div-mobile-menu-button">
               <Button
                 type="primary"
                 icon={<MenuOutlined />}
                 onClick={showDrawer}
                 className="mobile-menu-button"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="icon icon-tabler icon-tabler-menu-2"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  stroke-width="2.5"
-                  stroke="#ffffff"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M4 6l16 0" />
-                  <path d="M4 12l16 0" />
-                  <path d="M4 18l16 0" />
-                </svg>
               </Button>
+              </div>
+              <Outlet /> {/* Aquí se renderizan las rutas secundarias */}
             </section>
           </main>
 
@@ -116,21 +130,18 @@ export const Home = () => {
             <div className="sidebar-content">
               <div className="info-sideBar">
                 <section className="section-btn-drawer">
-                  <button
-                    onClick={closeDrawer}
-                    className="btn btn-close-offcanvas"
-                  >
+                  <button onClick={closeDrawer} className="btn btn-close-offcanvas">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="icon icon-tabler icon-tabler-x"
                       width="32"
                       height="32"
                       viewBox="0 0 24 24"
-                      stroke-width="2.5"
+                      strokeWidth="2.5"
                       stroke="#ffffff"
                       fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M18 6l-12 12" />
@@ -139,21 +150,43 @@ export const Home = () => {
                   </button>
                 </section>
                 <section className="section-logo-drawer">
-                  <img src="./logoIW.png" alt="logoIW" />
+                  <img src="/logoIW.png" alt="logoIW" />
                   <p>{userData ? userData.nombre : "Nombre Usuario"}</p>
                 </section>
               </div>
               <div className="opt-section">
-                {/* Renderiza las opciones en el Drawer si el rol es Jefe o Admin */}
-                {(userRol === 'Jefe' || userRol === 'Admin') && (
+                {(userRol === "Jefe" || userRol === "Admin") && (
                   <div className="opt-container">
-                    <p className="option">Gestión de áreas</p>
-                    <p className="option">Asignaciones</p>
-                    <p className="option">Usuarios</p>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/admin-areas" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/admin-areas")}
+                    >
+                      Gestión de áreas
+                    </button>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/asignaciones" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
+                    </button>
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/admin-usuarios" ? "active" : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/admin-usuarios")}
+                    >
+                      Usuarios
+                    </button>
                   </div>
                 )}
                 <div className="btn-logout-container">
-                  <p onClick={logOut} className="option">Cerrar sesión</p>
+                  <button onClick={logOut} className="option">
+                    Cerrar sesión
+                  </button>
                 </div>
               </div>
             </div>

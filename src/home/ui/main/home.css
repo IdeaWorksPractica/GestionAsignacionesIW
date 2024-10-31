@@ -7,7 +7,7 @@
   color: #ffff;
 }
 
-.mobile-menu-button {
+.div-mobile-menu-button {
   display: none;
 }
 .drawerBar {
@@ -36,14 +36,21 @@
   letter-spacing: 1px;
 }
 .option {
+  background-color: transparent;
+  border: none!important;
   text-align: center;
   width: 90%;
   padding-top: 1rem;
   padding-bottom: 1rem;
   border-radius: 10px;
+  color: #d9d9d9;
 }
+.option.active {
+  color: #444444;
+  background-color: #d9d9d9;
+}
+
 .option:hover {
-  cursor: pointer;
   color: #444444;
   background-color: #d9d9d9;
 }
@@ -105,12 +112,21 @@
   .sidebar-content {
     height: 100%;
   }
-  .mobile-menu-button {
+
+  .div-mobile-menu-button {
+    position: fixed;
     display: block;
+    height: 9vh;
+    display: flex;
+    align-items: center;
+    padding-left: 2rem;
   }
   .ant-drawer-body {
     padding: 0 !important;
     height: 100vh !important;
+  }
+  .ant-btn-variant-solid{
+    background: #AA56A7!important;
   }
 
 }
