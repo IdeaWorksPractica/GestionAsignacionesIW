@@ -17,23 +17,17 @@ export const AdminUsuarios = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
+  const getInfo = async () => {
+    setLoading(true);
+    const usersData = await getUsersInfo();
+    setUsers(usersData);
+    setFilteredUsers(usersData);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const getInfo = async () => {
-      const usersData = await getUsersInfo();
-      setUsers(usersData);
-      setFilteredUsers(usersData);
-      setLoading(false);
-    };
     getInfo();
   }, []);
-
-  const handleRegister = (newUser: { nombre: string; correo: string; contrasena: string; area: string; cargo: string }) => {
-    console.log('Nuevo usuario registrado:', newUser);
-  };
-
-  const handleUpdateUser = (updatedUser: IUser) => {
-    console.log('Usuario actualizado:', updatedUser);
-  };
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedArea(event.target.value);
@@ -160,12 +154,12 @@ export const AdminUsuarios = () => {
       </button>
 
       <UserRegisterModal
-        isOpen={isModalOpen}
-        onClose={() => toggleModal()}
-        onRegister={handleRegister}
-        onUpdate={handleUpdateUser}
-        selectedUser={selectedUser}
-      />
+  isOpen={isModalOpen}
+  onClose={() => toggleModal()}
+  refreshUsers={getInfo} // Refresca la lista al registrar o actualizar usuario
+  selectedUser={selectedUser}
+/>
+
     </main>
   );
 };

@@ -1,8 +1,9 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { IAreaTrabajo, IPuestoTrabajo } from "../../shared/models/AdminModels";
+import { notification } from "antd";
 
-// Variables globales para almacenar los datos de cargos, áreas y usuarios
 let cargosMap: { [key: string]: IPuestoTrabajo } = {};
 let areasMap: { [key: string]: IAreaTrabajo } = {};
 let usuariosArray: {
@@ -10,49 +11,45 @@ let usuariosArray: {
   nombre: string;
   primerInicioSesion: boolean;
   uid: string;
-  areaId:string,
-  puestoId:string,
+  areaId: string;
+  puestoId: string;
   areaTrabajo: string;
   puestoTrabajo: string;
 }[] = [];
 
-// Función para obtener y retornar la información de cargos
 export async function getCargosInfo() {
   const cargosCollectionRef = collection(db, "cargos");
 
   try {
     const cargosSnapshot = await getDocs(cargosCollectionRef);
-    cargosMap = {}; // Reinicia el mapa para evitar datos duplicados
+    cargosMap = {};
     cargosSnapshot.forEach((doc) => {
       cargosMap[doc.id] = doc.data() as IPuestoTrabajo;
     });
-    return Object.values(cargosMap); // Retorna los datos de cargos como un arreglo
+    return Object.values(cargosMap);
   } catch (error) {
     console.error("Error fetching cargos:", error);
     return [];
   }
 }
 
-// Función para obtener y retornar la información de áreas
 export async function getAreasInfo() {
   const areasCollectionRef = collection(db, "areas");
 
   try {
     const areasSnapshot = await getDocs(areasCollectionRef);
-    areasMap = {}; // Reinicia el mapa para evitar datos duplicados
+    areasMap = {};
     areasSnapshot.forEach((doc) => {
       areasMap[doc.id] = doc.data() as IAreaTrabajo;
     });
-    return Object.values(areasMap); // Retorna los datos de áreas como un arreglo
+    return Object.values(areasMap);
   } catch (error) {
     console.error("Error fetching areas:", error);
     return [];
   }
 }
 
-// Función para obtener la información de usuarios, actualizar usuariosArray y retornarla
 export async function getUsersInfo() {
-  // Primero obtener cargos y áreas
   await getCargosInfo();
   await getAreasInfo();
 
@@ -60,35 +57,111 @@ export async function getUsersInfo() {
 
   try {
     const usuariosSnapshot = await getDocs(usuariosCollectionRef);
-    usuariosArray = []; // Reinicia el arreglo para evitar datos duplicados
+    usuariosArray = [];
 
     usuariosSnapshot.forEach((doc) => {
       const userData = doc.data();
 
-      // Obtener el nombre del área y puesto asociados
       const userArea =
         areasMap[userData.areaTrabajo]?.nombre || "Área no encontrada";
       const userPuesto =
         cargosMap[userData.puestoTrabajo]?.nombre || "Puesto no encontrado";
-
-      // Agregar el usuario con la información de área y puesto
       usuariosArray.push({
         correoElectronico: userData.correoElectronico,
         nombre: userData.nombre,
         primerInicioSesion: userData.primerInicioSesion,
         uid: userData.uid,
-        areaId:userData.areaTrabajo,
+        areaId: userData.areaTrabajo,
         areaTrabajo: userArea,
-        puestoId:userData.puestoTrabajo,
+        puestoId: userData.puestoTrabajo,
         puestoTrabajo: userPuesto,
       });
     });
-    return usuariosArray; // Retorna el arreglo de usuarios
+    return usuariosArray;
   } catch (error) {
     console.error("Error fetching users:", error);
     return [];
   }
 }
 
-// Exportar las variables globales para que puedan ser usadas externamente
+export async function registerUser(
+  email: string,
+  password: string,
+  userInfo: {
+    nombre: string;
+    areaId: string;
+    puestoId: string;
+  }
+) {
+  const auth = getAuth();
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const userId = userCredential.user.uid;
+
+    const usuarioRef = doc(db, "usuarios", userId);
+    await setDoc(usuarioRef, {
+      uid: userId,
+      correoElectronico: email,
+      nombre: userInfo.nombre,
+      areaTrabajo: userInfo.areaId,
+      puestoTrabajo: userInfo.puestoId,
+      primerInicioSesion: true,
+    });
+    notification.success({
+      message: "Registro Exitoso",
+      description:
+        `El usuario ${userInfo.nombre} se registro exitosamente`,
+      placement: "topRight",
+    });
+    return userId;
+  } catch (error) {
+    notification.error({
+      message: "Error de registro",
+      description:
+        "Error al registrar al usuario",
+      placement: "topRight",
+    });
+    console.error("Error al registrar usuario:", error);
+    throw error;
+  }
+}
+
+export async function updateUserInfo(uid: string, updatedInfo: {
+  nombre?: string;
+  areaId?: string;
+  puestoId?: string;
+  correoElectronico?: string;
+}) {
+  try {
+    // Referencia al documento del usuario en la colección "usuarios" mediante su UID
+    const userRef = doc(db, "usuarios", uid);
+    
+    // Actualizar los campos del usuario con el objeto `updatedInfo`
+    await updateDoc(userRef, {
+      ...updatedInfo,
+      areaTrabajo: updatedInfo.areaId, // Opcional: actualiza el área si se proporciona
+      puestoTrabajo: updatedInfo.puestoId // Opcional: actualiza el puesto si se proporciona
+    });
+    notification.success({
+      message: "Actualizacion Exitosa",
+      description:
+        `Los datos de ${updatedInfo.nombre} se actualizaron exitosamente`,
+      placement: "topRight",
+    });
+    console.log("Información del usuario actualizada con éxito");
+  } catch (error) {
+    notification.error({
+      message: "Error al actualizar",
+      description:
+        "Error al actualizar los datos",
+      placement: "topRight",
+    });
+    console.error("Error al actualizar la información del usuario:", error);
+    throw error;
+  }
+}
 export { cargosMap, areasMap, usuariosArray };

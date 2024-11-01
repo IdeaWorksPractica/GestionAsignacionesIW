@@ -1,22 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useState, useEffect } from 'react';
-import { Popconfirm } from 'antd';
-import { getAreasInfo, getCargosInfo } from '../services/user.services';
+import { Modal, Spin, Popconfirm, notification } from 'antd';
+import { getAreasInfo, getCargosInfo, registerUser, updateUserInfo } from '../services/user.services';
+import { EyeInvisibleOutlined, EyeOutlined, LoadingOutlined } from '@ant-design/icons';
 
 interface UserRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegister: (user: { nombre: string; correo: string; contrasena: string; area: string; cargo: string }) => void;
-  onUpdate: (user: any) => void;
+  refreshUsers: () => void; // Nuevo prop para refrescar la lista de usuarios
   selectedUser: any | null;
 }
 
 export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
   isOpen,
   onClose,
-  onRegister,
-  onUpdate,
+  refreshUsers,
   selectedUser,
 }) => {
   const [nombre, setNombre] = useState('');
@@ -28,6 +26,10 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
   const [cargos, setCargos] = useState<{ id: string; nombre: string; idAreaTrabajo: string }[]>([]);
   const [filteredCargos, setFilteredCargos] = useState(cargos);
   const [closing, setClosing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const antIcon = <LoadingOutlined style={{ fontSize: 24, color: "white" }} spin />;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,11 +57,49 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
     setFilteredCargos(cargos.filter((c) => c.idAreaTrabajo === area));
   }, [area, cargos]);
 
-  const handleRegister = () => {
-    const userData = { nombre, correo, contrasena, area, cargo };
-    selectedUser ? onUpdate(userData) : onRegister(userData);
-    handleClear();
-    onClose();
+  const handleRegisterOrUpdate = async () => {
+    setLoading(true);
+    try {
+      if (selectedUser) {
+        const hasChanges = 
+          nombre !== selectedUser.nombre ||
+          correo !== selectedUser.correoElectronico ||
+          area !== selectedUser.areaId ||
+          cargo !== selectedUser.puestoId;
+
+        if (!hasChanges) {
+          notification.info({
+            message: 'Sin Cambios',
+            description: 'Debe realizar al menos un cambio para actualizar la información.',
+            placement: 'topRight',
+          });
+          setLoading(false);
+          return;
+        }
+
+        await updateUserInfo(selectedUser.uid, { nombre, correoElectronico: correo, areaId: area, puestoId: cargo });
+      } else {
+        await registerUser(correo, contrasena, { nombre, areaId: area, puestoId: cargo });
+      }
+
+      handleClear();
+      onClose();
+      refreshUsers(); // Llamada a la función para refrescar usuarios solo en caso de registro/actualización exitoso
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showConfirmation = () => {
+    Modal.confirm({
+      title: selectedUser ? 'Actualizar Usuario' : 'Registrar Usuario',
+      content: `¿Estás seguro de que deseas ${selectedUser ? 'actualizar' : 'registrar'} al usuario?`,
+      okText: 'Sí',
+      cancelText: 'No',
+      onOk: handleRegisterOrUpdate,
+    });
   };
 
   const handleClear = () => {
@@ -73,14 +113,17 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
   const isFormComplete = nombre && /\S+@\S+\.\S+/.test(correo) && (selectedUser || contrasena) && area && cargo;
   const hasData = nombre || correo || contrasena || area || cargo;
 
-  // Cerrar modal con animación de salida
   const handleModalClose = () => {
     setClosing(true);
     setTimeout(() => {
       setClosing(false);
       handleClear();
       onClose();
-    }, 400); // Tiempo coincide con la duración de la animación
+    }, 400);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   if (!isOpen && !closing) return null;
@@ -90,7 +133,7 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
       <div className={`modal-content ${closing ? 'hide' : ''}`}>
         {hasData ? (
           <Popconfirm
-            title="Al cerrar la model se perdaran los datos, desea cerrar?"
+            title="¿Estás seguro de que deseas cerrar la modal? Los datos ingresados se perderán."
             onConfirm={handleModalClose}
             onCancel={() => {}}
             okText="Sí"
@@ -101,7 +144,7 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
         ) : (
           <button className="close-button" onClick={handleModalClose}>X</button>
         )}
-        <h4 className="text-center fw-bold mb-5">{selectedUser ? 'Editar Usuario' : 'Registrar Usuario'}</h4>
+        <h4 className="text-center fw-bold mb-3">{selectedUser ? 'Editar Usuario' : 'Registrar Usuario'}</h4>
         <div className="div-register-form">
           <label>Nombre</label>
           <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
@@ -113,7 +156,17 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
         {!selectedUser && (
           <div className="div-register-form">
             <label>Contraseña</label>
-            <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
+                className="password-input-modal"
+              />
+              <button type="button" onClick={togglePasswordVisibility} className="password-toggle-modal">
+                {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+              </button>
+            </div>
           </div>
         )}
         <div className="div-register-form">
@@ -141,10 +194,10 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
         <div className="d-flex justify-content-center">
           <button
             className={`btn ${isFormComplete ? 'btn-blue' : 'btn-desactivated'}`}
-            onClick={handleRegister}
+            onClick={showConfirmation}
             disabled={!isFormComplete}
           >
-            {selectedUser ? 'Actualizar Usuario' : 'Registrar Usuario'}
+            {loading ? <Spin indicator={antIcon} /> : selectedUser ? 'Actualizar Usuario' : 'Registrar Usuario'}
           </button>
         </div>
       </div>

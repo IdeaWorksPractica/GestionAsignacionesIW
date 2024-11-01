@@ -61,30 +61,4 @@
   outline: none !important;
   border: none !important;
 }
-@media (width<830px) {
-  .div-filters {
-    left: 0;
-    right: 0;
-    width: 100%;
-    position: fixed;
-    height: 12%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-bottom: 1rem;
-  }
-  .filter-container {
-    height: 40px;
-    width: 90%;
-    margin-bottom: 1rem;
-  }
-  .users-cards-section {
-    margin-top: 28%;
-    height: 78%;
-  }
-  .pagination {
-    width: 100%;
-    position: fixed;
-    height: 10%;
-  }
-}
+
