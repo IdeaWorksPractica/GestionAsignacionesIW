@@ -31,7 +31,7 @@ body{
   }
   
 
-
+/***************PAGINACION************/
   .pagination {
     display: flex;
     justify-content: center;
@@ -41,8 +41,9 @@ body{
   
   .page-button {
     background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 50%;
     margin: 0 4px;
     cursor: pointer;
   }
@@ -54,23 +55,35 @@ body{
   
 
   /* Estilo para el FAB */
-.fab-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #AA56A7;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
+  .fab-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #AA56A7;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .fab-button:hover {
+    transform: scale(1.1); /* Agranda el botón un 10% */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* Aumenta la sombra */
+  }
+  
+  .fab-button:hover .fab-content {
+    transform: rotate(180deg); /* Rota el contenido dentro del botón */
+    transition: transform 0.3s ease; /* Aplica una transición al contenido */
+  }
+  
 
 /* Estilo para la modal */
 .modal-overlay {
@@ -84,18 +97,66 @@ body{
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.4s ease forwards;
 }
 
 .modal-content {
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  max-width: 50%;
+  max-width: 30%;
   max-height: 90%;
   overflow-y: auto;
   position: relative;
+  transform: scale(0.9);
+  animation: scaleIn 0.2s ease forwards;
 }
 
+.modal-overlay.hide {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+.modal-content.hide {
+  animation: scaleOut 0.2s ease forwards;
+}
+
+/* Animaciones de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Animaciones de salida */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.9);
+  }
+}
 .close-button {
   position: absolute;
   top: 10px;
@@ -105,6 +166,34 @@ body{
   font-size: 24px;
   cursor: pointer;
 }
+.div-register-form{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+.div-register-form>label{
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  color: #000000;
+  margin-bottom: 5px;
+}
+.div-register-form>input{
+ border-radius: 9px;
+ border: none;
+ outline: none;
+ background-color: #D9D9D9;
+ font-size: 1.1rem;
+ padding: 10px;
+}
+.div-register-form>select{
+  border-radius: 9px;
+  border: none;
+  outline: none;
+  background-color: #D9D9D9;
+  font-size: 1.1rem;
+  padding: 10px;
+ }
 @media(width<580px){
   .modal-content {
     background: white;
@@ -115,4 +204,29 @@ body{
     overflow-y: auto;
     position: relative;
   }
+}
+
+
+/******ESTILOS DE BOTONES *******/
+.btn-blue{
+  background-color:#0098DA ;
+  color: #f0f0f0;
+  width: fit-content;
+  padding: 10px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 9px;
+}
+.btn-blue:hover{
+  background-color:#AA56A7 ;
+  color: #f0f0f0;
+}
+.btn-desactivated{
+  background-color:#D9D9D9 ;
+  color: #000;
+  width: fit-content;
+  padding: 10px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 9px;
 }

@@ -10,6 +10,8 @@ let usuariosArray: {
   nombre: string;
   primerInicioSesion: boolean;
   uid: string;
+  areaId:string,
+  puestoId:string,
   areaTrabajo: string;
   puestoTrabajo: string;
 }[] = [];
@@ -75,7 +77,9 @@ export async function getUsersInfo() {
         nombre: userData.nombre,
         primerInicioSesion: userData.primerInicioSesion,
         uid: userData.uid,
+        areaId:userData.areaTrabajo,
         areaTrabajo: userArea,
+        puestoId:userData.puestoTrabajo,
         puestoTrabajo: userPuesto,
       });
     });

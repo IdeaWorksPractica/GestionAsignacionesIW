@@ -1,37 +1,39 @@
 import { useState, useEffect } from 'react';
 import './admin-usuarios.css';
 import EditIcon from '../../../public/editIcon.svg';
-import { getUsersInfo, getAreasInfo } from '../services/user.services';
+import { getUsersInfo } from '../services/user.services';
 import { Spin } from 'antd';
 import { IUser } from '../../shared/models/IUsuario';
-import { IAreaTrabajo } from '../../shared/models/AdminModels';
+import { UserRegisterModal } from './UserRegisterModal';
 
 export const AdminUsuarios = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<IUser[]>([]);
-  const [areas, setAreas] = useState<IAreaTrabajo[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
-  
-  // Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-
-  // Estado para la modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   useEffect(() => {
     const getInfo = async () => {
       const usersData = await getUsersInfo();
-      const areasData = await getAreasInfo();
       setUsers(usersData);
       setFilteredUsers(usersData);
-      setAreas(areasData);
       setLoading(false);
     };
     getInfo();
   }, []);
+
+  const handleRegister = (newUser: { nombre: string; correo: string; contrasena: string; area: string; cargo: string }) => {
+    console.log('Nuevo usuario registrado:', newUser);
+  };
+
+  const handleUpdateUser = (updatedUser: IUser) => {
+    console.log('Usuario actualizado:', updatedUser);
+  };
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedArea(event.target.value);
@@ -57,20 +59,20 @@ export const AdminUsuarios = () => {
   const indexOfLastUser = currentPage * itemsPerPage;
   const indexOfFirstUser = indexOfLastUser - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
-  // Función para abrir/cerrar la modal
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleModal = (user?: IUser) => {
+    setSelectedUser(user || null);
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <main className='container-render-area'>
       <section className='title-container'>
         <p>Usuarios</p>
       </section>
-      
+
       {loading ? (
         <Spin
           tip="Cargando..."
@@ -93,8 +95,8 @@ export const AdminUsuarios = () => {
                 onChange={handleAreaChange}
               >
                 <option value="">Todas las áreas</option>
-                {areas.map(area => (
-                  <option key={area.id} value={area.nombre}>{area.nombre}</option>
+                {Array.from(new Set(users.map(user => user.areaTrabajo))).map((area, index) => (
+                  <option key={index} value={area}>{area}</option>
                 ))}
               </select>
             </div>
@@ -111,7 +113,7 @@ export const AdminUsuarios = () => {
           <div className='container-fluid users-cards-section'>
             <div className='row'>
               {currentUsers.map((user) => (
-                <div key={user.uid} className='col-12 col-xl-3 col-md-6 col-sm-12'>
+                <div key={user.uid} className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12' onClick={() => toggleModal(user)}>
                   <div className='card-user'>
                     <div className='title-cards'>
                       <span>{user.nombre}</span>
@@ -139,7 +141,6 @@ export const AdminUsuarios = () => {
             </div>
           </div>
 
-          {/* Paginación */}
           <div className='pagination'>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
               <button
@@ -154,24 +155,17 @@ export const AdminUsuarios = () => {
         </section>
       )}
 
-      {/* Botón FAB */}
-      <button className="fab-button" onClick={toggleModal}>
-        +
+      <button className="fab-button" onClick={() => toggleModal()}>
+      <span className="fab-content">+</span>
       </button>
 
-      {/* Modal de Pantalla Completa */}
-      {isModalOpen && (
-        <div className="modal-overlay" onClick={toggleModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={toggleModal}>
-              X
-            </button>
-            {/* Contenido de la modal */}
-            <h2>Contenido de la Modal</h2>
-            <p>Esta es una modal de pantalla completa.</p>
-          </div>
-        </div>
-      )}
+      <UserRegisterModal
+        isOpen={isModalOpen}
+        onClose={() => toggleModal()}
+        onRegister={handleRegister}
+        onUpdate={handleUpdateUser}
+        selectedUser={selectedUser}
+      />
     </main>
   );
 };

@@ -1,72 +1,90 @@
-.card-user{
-    height: 5vh;
-    background-color: #D9D9D9;
-    border-radius: 12px;
-    height: auto;
+.card-user {
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  height: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.title-cards{
-    width: 100%;
-    border-radius: 12px 12px 0px 0px;
-    background-color: #0098DA;
-    height: 5vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.card-user:hover {
+  cursor: pointer;
+  cursor: pointer;
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.111);
 }
-.title-cards>span{
-    font-size: 1.2rem;
-    color: #FFFFFF;
+.title-cards {
+  width: 100%;
+  border-radius: 12px 12px 0px 0px;
+  background-color: #0098da;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.info-card-container{
-    position: relative;
-    padding: 1rem;
+.title-cards > span {
+  font-size: 1.2rem;
+  color: #ffffff;
 }
-.div-icon-edit {  
-    padding: 1rem;
-    position: absolute;
-    bottom: 0;
+.info-card-container {
+  position: relative;
+  padding: 1rem;
+}
+.div-icon-edit {
+  padding: 1rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: end;
+}
+.div-filters {
+  width: 100%;
+  height: 5vh;
+  display: flex;
+  margin-bottom: 2rem;
+  justify-content: space-around;
+}
+.users-cards-section {
+  height: 70vh;
+}
+.filter-container {
+  width: 280px;
+  background-color: #d9d9d9 !important;
+  padding: 5px 20px 5px 20px;
+  border-radius: 12px;
+}
+.select-input {
+  height: 100%;
+  width: 100%;
+  border: none !important;
+  background-color: transparent;
+}
+.select-input:focus {
+  outline: none !important;
+  border: none !important;
+}
+@media (width<830px) {
+  .div-filters {
+    left: 0;
     right: 0;
-    display: flex;
-    justify-content: end;
-}
-.div-filters{
     width: 100%;
-    height: 5vh;
+    position: fixed;
+    height: 12%;
     display: flex;
-    margin-bottom: 2rem;
-    justify-content: space-around;
-    
-}
-.users-cards-section{
-    height: 70vh;
-}
-.filter-container{
-    width: 280px;
-    background-color: #D9D9D9!important;
-    padding: 5px 20px 5px 20px;
-    border-radius: 12px;
-}
-.select-input{
-    height: 100%;
-    width: 100%;
-    border: none!important;
-    background-color:transparent;
-}
-.select-input:focus{
-    outline: none!important;
-    border: none!important;
-}
-@media(width<830px){
-    .div-filters{
-        height: auto;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-    
-.filter-container{
-    height: 40px;
-    width: 80%;
+    align-items: center;
+    flex-direction: column;
     margin-bottom: 1rem;
-}
+  }
+  .filter-container {
+    height: 40px;
+    width: 90%;
+    margin-bottom: 1rem;
+  }
+  .users-cards-section {
+    margin-top: 28%;
+    height: 78%;
+  }
+  .pagination {
+    width: 100%;
+    position: fixed;
+    height: 10%;
+  }
 }
