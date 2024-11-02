@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { Modal, Spin, Popconfirm, notification } from 'antd';
-import { getAreasInfo, getCargosInfo, registerUser, updateUserInfo } from '../services/user.services';
+import {registerUser, updateUserInfo } from '../services/user.services';
+import { getAreasInfo, getCargosInfo } from '../../shared/services/areas_puestos.services';
 import { EyeInvisibleOutlined, EyeOutlined, LoadingOutlined } from '@ant-design/icons';
+import { IAreaTrabajo, IPuestoTrabajo } from '../../shared/models/AdminModels';
 
 interface UserRegisterModalProps {
   isOpen: boolean;
@@ -22,8 +24,8 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
   const [contrasena, setContrasena] = useState('');
   const [area, setArea] = useState('');
   const [cargo, setCargo] = useState('');
-  const [areas, setAreas] = useState<{ id: string; nombre: string }[]>([]);
-  const [cargos, setCargos] = useState<{ id: string; nombre: string; idAreaTrabajo: string }[]>([]);
+  const [areas, setAreas] = useState<IAreaTrabajo[]>([]);
+  const [cargos, setCargos] = useState<IPuestoTrabajo[]>([]);
   const [filteredCargos, setFilteredCargos] = useState(cargos);
   const [closing, setClosing] = useState(false);
   const [loading, setLoading] = useState(false);

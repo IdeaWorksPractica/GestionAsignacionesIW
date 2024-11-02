@@ -13,11 +13,14 @@ export const AdminUsuarios = () => {
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  let itemsPerPage = 6;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   const getInfo = async () => {
+    if (window.innerWidth < 580) {
+      itemsPerPage=2;
+    }
     setLoading(true);
     const usersData = await getUsersInfo();
     setUsers(usersData);
