@@ -9,7 +9,7 @@ import { IAreaTrabajo, IPuestoTrabajo } from '../../shared/models/AdminModels';
 interface UserRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  refreshUsers: () => void; // Nuevo prop para refrescar la lista de usuarios
+  refreshUsers: () => void; 
   selectedUser: any | null;
 }
 
@@ -86,7 +86,7 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
 
       handleClear();
       onClose();
-      refreshUsers(); // Llamada a la función para refrescar usuarios solo en caso de registro/actualización exitoso
+      refreshUsers();
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -171,6 +171,7 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
             </div>
           </div>
         )}
+        <div className='container-dos-componentes'>
         <div className="div-register-form">
           <label>Área de trabajo</label>
           <select value={area} onChange={(e) => setArea(e.target.value)}>
@@ -192,6 +193,7 @@ export const UserRegisterModal: React.FC<UserRegisterModalProps> = ({
               </option>
             ))}
           </select>
+        </div>
         </div>
         <div className="d-flex justify-content-center">
           <button

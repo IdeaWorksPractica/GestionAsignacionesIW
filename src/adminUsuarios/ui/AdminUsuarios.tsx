@@ -5,6 +5,7 @@ import { getUsersInfo } from '../services/user.services';
 import { Spin } from 'antd';
 import { IUser } from '../../shared/models/IUsuario';
 import { UserRegisterModal } from './UserRegisterModal';
+import { Pagination } from '../../shared/ui/Pagination';
 
 export const AdminUsuarios = () => {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,6 @@ export const AdminUsuarios = () => {
   const getInfo = async () => {
     setLoading(true);
     const usersData = await getUsersInfo();
-    console.log(usersData)
     setUsers(usersData);
     setFilteredUsers(usersData);
     setLoading(false);
@@ -60,11 +60,10 @@ export const AdminUsuarios = () => {
     setFilteredUsers(filtered);
   };
 
+  // Obtener usuarios de la página actual
   const indexOfLastUser = currentPage * itemsPerPage;
   const indexOfFirstUser = indexOfLastUser - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   const toggleModal = (user?: IUser) => {
     setSelectedUser(user || null);
@@ -90,7 +89,7 @@ export const AdminUsuarios = () => {
           }}
         />
       ) : (
-        <section className='cards-container'>
+        <section className='cards-container whit-filters'>
           <div className='div-filters'>
             <div className='filter-container'>
               <select 
@@ -145,17 +144,13 @@ export const AdminUsuarios = () => {
             </div>
           </div>
 
-          <div className='pagination'>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-              <button
-                key={number}
-                className={`page-button ${currentPage === number ? 'active' : ''}`}
-                onClick={() => paginate(number)}
-              >
-                {number}
-              </button>
-            ))}
-          </div>
+          {/* Componente de paginación */}
+          <Pagination
+            totalItems={filteredUsers.length}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={(pageNumber) => setCurrentPage(pageNumber)}
+          />
         </section>
       )}
 

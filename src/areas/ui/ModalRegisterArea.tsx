@@ -75,16 +75,17 @@ export const ModalRegisterArea: React.FC<{ isOpen: boolean; onClose: () => void;
         />
       </div>
 
-      <div className="div-register-form">
+    <div className='div-agregar-opt'>
+    <div className="div-register-form w-75">
         <label>Rol</label>
-        <select value={rol} onChange={(e) => setRol(e.target.value as "Jefe" | "Empleado" | "Admin")}>
+        <select value={rol} onChange={(e) => setRol(e.target.value as "Jefe" | "Empleado")}>
           <option value="">Selecciona un rol</option>
           <option value="Jefe">Jefe</option>
           <option value="Empleado">Empleado</option>
-          <option value="Admin">Admin</option>
         </select>
-        <button onClick={handleAddPuesto} className="btn btn-blue">Agregar</button>
       </div>
+      <button onClick={handleAddPuesto} className="btn btn-blue w-25">Agregar</button>
+    </div>
 
       <table className="table">
         <thead>

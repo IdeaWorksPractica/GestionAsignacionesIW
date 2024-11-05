@@ -1,95 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-body{
-    font-family: 'Rubik';
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+body {
+  font-family: "Rubik";
 }
 
 .container-render-area {
-    width: 100%;
-    height: 100vh;
-  }
-  .title-container {
-    position: fixed;
-    width: 100%;
-    height: 9vh;
-    background-color: #d9d9d9;
-    display: flex;
-    align-items: center;
-    justify-content: center !important;
-    z-index: 999;
-  }
-  .title-container > p {
-      color: #444444;
-    margin-bottom: 0;
-    width: fit-content;
-    height: fit-content;
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-  }
-  .cards-container{
-    width: 100%;
-    height: 91vh;
-    padding: 1rem;
-    padding-top: 11vh;
-  }
-  
+  width: 100%;
+  height: 100vh;
+}
+.title-container {
+  position: fixed;
+  width: 100%;
+  height: 9vh;
+  background-color: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  z-index: 999;
+}
+.title-container > p {
+  color: #444444;
+  margin-bottom: 0;
+  width: fit-content;
+  height: fit-content;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.cards-container {
+  width: 100%;
+  height: 95vh;
+  padding: 1rem;
+  padding-top: 11vh;
+}
 
-/***************PAGINACION************/
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    height: 5vh!important;
-  }
-  
-  .page-button {
-    background-color: #f0f0f0;
-    border: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    margin: 0 4px;
-    cursor: pointer;
-  }
-  
-  .page-button.active {
-    background-color: #AA56A7;
-    color: white;
-  }
-  
 
-  /* Estilo para el FAB */
-  .fab-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #AA56A7;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .fab-button:hover {
-    transform: scale(1.1); /* Agranda el botón un 10% */
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* Aumenta la sombra */
-  }
-  
-  .fab-button:hover .fab-content {
-    transform: rotate(180deg); /* Rota el contenido dentro del botón */
-    transition: transform 0.3s ease; /* Aplica una transición al contenido */
-  }
-  
+/* Estilo para el FAB */
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #aa56a7;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fab-button:hover {
+  transform: scale(1.1); /* Agranda el botón un 10% */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* Aumenta la sombra */
+}
+
+.fab-button:hover .fab-content {
+  transform: rotate(180deg); /* Rota el contenido dentro del botón */
+  transition: transform 0.3s ease; /* Aplica una transición al contenido */
+}
 
 /* Estilo para la modal */
+
+.ant-modal-wrap{
+  width: 100%!important;
+  height: 100vh!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-modal{
+  width: 475px!important;
+}
+.ant-modal-content{
+  height:520px!important ;
+  overflow-y: scroll;
+  padding: 1.5rem;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -108,7 +100,7 @@ body{
   background: white;
   padding: 1.5rem;
   border-radius: 8px;
-  max-width: 30%;
+  width: 475px;
   max-height: 95%;
   overflow-y: auto;
   position: relative;
@@ -116,8 +108,8 @@ body{
   animation: scaleIn 0.2s ease forwards;
 }
 
-.modal-content>h4 {
- font-size: 1.2rem;
+.modal-content > h4 {
+  font-size: 1.2rem;
 }
 .modal-overlay.hide {
   animation: fadeOut 0.2s ease forwards;
@@ -125,6 +117,15 @@ body{
 
 .modal-content.hide {
   animation: scaleOut 0.2s ease forwards;
+}
+
+.container-dos-componentes {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.container-dos-componentes > .div-register-form {
+  width: 48%;
 }
 
 /* Animaciones de entrada */
@@ -173,36 +174,36 @@ body{
   font-size: 24px;
   cursor: pointer;
 }
-.div-register-form{
+.div-register-form {
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
 }
-.div-register-form>label{
+.div-register-form > label {
   font-weight: bold;
   letter-spacing: 1px;
   font-size: 1rem;
   color: #000000;
   margin-bottom: 5px;
 }
-.div-register-form>input{
- border-radius: 9px;
- border: none;
- outline: none;
- background-color: #D9D9D9;
- font-size: 1rem;
- padding: 10px;
+.div-register-form > input {
+  border-radius: 9px;
+  border: none;
+  outline: none;
+  background-color: #d9d9d9;
+  font-size: 1rem;
+  padding: 5px;
 }
 .password-container {
   position: relative;
   width: 100%;
 }
 
-.password-input-modal{
+.password-input-modal {
   width: 100%;
-  padding: 10px;
-  padding-right: 40px; /* Para dar espacio al botón */
-  background-color: #D9D9D9;
+  padding: 5px;
+  padding-right: 40px;
+  background-color: #d9d9d9;
   border-radius: 9px;
   font-size: 1rem;
   border: none;
@@ -210,8 +211,7 @@ body{
 .password-input-modal:focus {
   outline: none;
   border: none;
-  }
-
+}
 
 .password-toggle-modal {
   position: absolute;
@@ -224,18 +224,18 @@ body{
   color: #000000;
 }
 
-.div-register-form>select{
+.div-register-form > select {
   border-radius: 9px;
   border: none;
   outline: none;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   font-size: 1rem;
   padding: 10px;
- }
-@media(width<580px){
+}
+@media (width<580px) {
   .modal-content {
     background: white;
-    padding: 2rem;
+    padding: 1.1rem;
     border-radius: 8px;
     max-width: 90%;
     max-height: 90%;
@@ -244,10 +244,9 @@ body{
   }
 }
 
-
 /******ESTILOS DE BOTONES *******/
-.btn-blue{
-  background-color:#0098DA ;
+.btn-blue {
+  background-color: #0098da;
   color: #f0f0f0;
   width: fit-content;
   padding: 5px 10px 5px 10px;
@@ -255,12 +254,12 @@ body{
   border: none;
   border-radius: 9px;
 }
-.btn-blue:hover{
-  background-color:#AA56A7 ;
+.btn-blue:hover {
+  background-color: #aa56a7;
   color: #f0f0f0;
 }
-.btn-desactivated{
-  background-color:#D9D9D9 ;
+.btn-desactivated {
+  background-color: #d9d9d9;
   color: #000;
   width: fit-content;
   padding: 10px;
@@ -268,7 +267,6 @@ body{
   border: none;
   border-radius: 9px;
 }
-
 
 @media (width<830px) {
   .div-filters {
@@ -282,7 +280,6 @@ body{
     flex-direction: column;
     margin-bottom: 1rem;
     background-color: white;
-
   }
   .filter-container {
     height: 40px;
@@ -293,24 +290,39 @@ body{
     margin-top: 28%;
     height: 78%;
   }
-  .pagination {
-    width: 100%;
-    position: fixed;
-    height: 10%;
-  }
 }
 
-@media(width<580px){
-  .row{
+@media (width<580px) {
+  .title-container {
+   z-index: 0; 
+}
+  .row {
     height: 100%;
     display: flex;
     align-content: space-between;
   }
-  .cards-container{
+  .cards-container {
     width: 100%;
     height: 100vh;
     padding: 1rem;
-    padding-top: 9vh;
+    padding-top: 11vh;
+    display: grid;
+    grid-template-rows: 85% 10%;
+    align-content: space-between;
+  }
+  .row {
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-row-gap: 1rem;
+  }
+  .whit-filters{
+    grid-template-rows: 90% 10%;
+  }
+  .ant-list-empty-text{
+    padding: 0!important;
+  }
+  .ant-modal-content{
+    padding: 1.1rem;
   }
   .div-filters {
     left: 0;
@@ -326,7 +338,19 @@ body{
     z-index: 999;
     padding-top: 1rem;
   }
-  .pagination {
-    height: 15%!important;
-  }
+}
+
+.div-agregar-opt{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.div-agregar-opt>.div-register-form{
+  width: 70%!important;
+}
+.div-agregar-opt>button{
+  height: 43px;
+  padding: 10px;
+  width: 25%!important;
 }

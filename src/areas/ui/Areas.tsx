@@ -4,6 +4,7 @@ import { Spin, List } from "antd";
 import { getAreasInfo, getCargosInfo } from "../../shared/services/areas_puestos.services";
 import { IAreaTrabajo, IPuestoTrabajo } from "../../shared/models/AdminModels";
 import { ModalRegisterArea } from './ModalRegisterArea'; // Importa el modal
+import { Pagination } from "../../shared/ui/Pagination";
 
 export const Areas = () => {
   const [areas, setAreas] = useState<IAreaTrabajo[]>([]);
@@ -42,13 +43,10 @@ export const Areas = () => {
     return cargos.filter(cargo => cargo.idAreaTrabajo === areaId);
   };
 
-  // Configuración de paginación
+  // Obtener áreas de la página actual
   const indexOfLastArea = currentPage * itemsPerPage;
   const indexOfFirstArea = indexOfLastArea - itemsPerPage;
   const currentAreas = areas.slice(indexOfFirstArea, indexOfLastArea);
-  const totalPages = Math.ceil(areas.length / itemsPerPage);
-  
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Función para abrir y cerrar el modal
   const toggleModal = () => {
@@ -75,7 +73,7 @@ export const Areas = () => {
         />
       ) : (
         <section className='cards-container'>
-          <div className='container-fluid users-cards-section'>
+          <div className='container-fluid '>
             <div className='row'>
               {currentAreas.map((area) => (
                 <div key={area.id} className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12'>
@@ -102,18 +100,13 @@ export const Areas = () => {
             </div>
           </div>
 
-          {/* Paginación */}
-          <div className='pagination'>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-              <button
-                key={number}
-                className={`page-button ${currentPage === number ? 'active' : ''}`}
-                onClick={() => paginate(number)}
-              >
-                {number}
-              </button>
-            ))}
-          </div>
+          {/* Componente de paginación */}
+          <Pagination
+            totalItems={areas.length}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={(pageNumber) => setCurrentPage(pageNumber)}
+          />
         </section>
       )}
 
