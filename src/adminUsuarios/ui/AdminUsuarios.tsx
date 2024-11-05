@@ -13,16 +13,14 @@ export const AdminUsuarios = () => {
   const [selectedArea, setSelectedArea] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  let itemsPerPage = 6;
+  const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 580 ? 2 : 6); // Inicialización dinámica
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   const getInfo = async () => {
-    if (window.innerWidth < 580) {
-      itemsPerPage=2;
-    }
     setLoading(true);
     const usersData = await getUsersInfo();
+    console.log(usersData)
     setUsers(usersData);
     setFilteredUsers(usersData);
     setLoading(false);
@@ -30,6 +28,15 @@ export const AdminUsuarios = () => {
 
   useEffect(() => {
     getInfo();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 580 ? 2 : 6); // Ajuste dinámico de itemsPerPage
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize); // Limpieza del listener
   }, []);
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -110,7 +117,7 @@ export const AdminUsuarios = () => {
           <div className='container-fluid users-cards-section'>
             <div className='row'>
               {currentUsers.map((user) => (
-                <div key={user.uid} className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12' onClick={() => toggleModal(user)}>
+                <div key={user.uid} className='col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12' onClick={() => toggleModal(user)}>
                   <div className='card-user'>
                     <div className='title-cards'>
                       <span>{user.nombre}</span>
@@ -157,12 +164,11 @@ export const AdminUsuarios = () => {
       </button>
 
       <UserRegisterModal
-  isOpen={isModalOpen}
-  onClose={() => toggleModal()}
-  refreshUsers={getInfo} // Refresca la lista al registrar o actualizar usuario
-  selectedUser={selectedUser}
-/>
-
+        isOpen={isModalOpen}
+        onClose={() => toggleModal()}
+        refreshUsers={getInfo}
+        selectedUser={selectedUser}
+      />
     </main>
   );
 };

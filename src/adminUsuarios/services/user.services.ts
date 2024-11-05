@@ -8,6 +8,7 @@ import {
 import { db } from "../../../firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { notification } from "antd";
+import { IPuestoTrabajo, IAreaTrabajo } from "../../shared/models/AdminModels";
 import {
   getAreasInfo,
   getCargosInfo,
@@ -15,9 +16,21 @@ import {
 
 // Función para obtener la información de los usuarios
 async function getUsersInfo() {
-  const cargosMap = await getCargosInfo();
-  const areasMap = await getAreasInfo();
+  // Obtenemos los datos de cargos y áreas
+  const cargosArray = await getCargosInfo();
+  const areasArray = await getAreasInfo();
   const usuariosCollectionRef = collection(db, "usuarios");
+
+  // Convertimos los arreglos en mapas indexados por `id`
+  const cargosMap = cargosArray.reduce((map, cargo) => {
+    map[cargo.id] = cargo;
+    return map;
+  }, {} as { [key: string]: IPuestoTrabajo });
+
+  const areasMap = areasArray.reduce((map, area) => {
+    map[area.id] = area;
+    return map;
+  }, {} as { [key: string]: IAreaTrabajo });
 
   try {
     const usuariosSnapshot = await getDocs(usuariosCollectionRef);
@@ -32,13 +45,13 @@ async function getUsersInfo() {
       puestoTrabajo: string;
     }[] = [];
 
+    // Iteramos sobre cada usuario y extraemos la información
     usuariosSnapshot.forEach((doc) => {
       const userData = doc.data();
 
-      const userArea =
-        areasMap[userData.areaTrabajo]?.nombre || "Área no encontrada";
-      const userPuesto =
-        cargosMap[userData.puestoTrabajo]?.nombre || "Puesto no encontrado";
+      // Accedemos al nombre de área y puesto usando los mapas generados
+      const userArea = areasMap[userData.areaTrabajo]?.nombre || "Área no encontrada";
+      const userPuesto = cargosMap[userData.puestoTrabajo]?.nombre || "Puesto no encontrado";
 
       usuariosArray.push({
         correoElectronico: userData.correoElectronico,
@@ -57,6 +70,7 @@ async function getUsersInfo() {
     return [];
   }
 }
+
 
 // Función para registrar un nuevo usuario
 async function registerUser(

@@ -6,5 +6,5 @@ export interface IPuestoTrabajo {
   id: string;
   nombre: string;
   idAreaTrabajo: string;
-  rol: "Jefe" | "Empleado";
+  rol: "Jefe" | "Empleado"| "Admin";
 }

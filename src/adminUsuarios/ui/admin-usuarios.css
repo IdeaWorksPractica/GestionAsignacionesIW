@@ -63,3 +63,18 @@
   border: none !important;
 }
 
+@media(width<580px){
+  .users-cards-section{
+    margin-top: 32%!important;
+    height: 73%!important;
+  }
+  .card-user {
+    height: 100%;
+  }
+}
+@media(width<440px){
+  .users-cards-section{
+    margin-top: 38%!important;
+    height: 73%!important;
+  }
+}

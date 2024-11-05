@@ -1,21 +1,20 @@
 import { useState, useEffect } from "react";
-import '../../adminUsuarios/ui/admin-usuarios.css'
+import '../../adminUsuarios/ui/admin-usuarios.css';
 import { Spin, List } from "antd";
 import { getAreasInfo, getCargosInfo } from "../../shared/services/areas_puestos.services";
 import { IAreaTrabajo, IPuestoTrabajo } from "../../shared/models/AdminModels";
+import { ModalRegisterArea } from './ModalRegisterArea'; // Importa el modal
 
 export const Areas = () => {
   const [areas, setAreas] = useState<IAreaTrabajo[]>([]);
   const [cargos, setCargos] = useState<IPuestoTrabajo[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  let itemsPerPage = 6; // Mismo número de items por página que en AdminUsuarios
+  const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 580 ? 2 : 6); // Ajuste dinámico de items por página
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la visibilidad del modal
 
   // Función para obtener datos de áreas y cargos
   const getInfo = async () => {
-    if (window.innerWidth < 580) {
-      itemsPerPage=2;
-    }
     setLoading(true);
     const areasData = await getAreasInfo();
     const cargosData = await getCargosInfo();
@@ -28,6 +27,16 @@ export const Areas = () => {
     getInfo();
   }, []);
 
+  // Actualizar items por página en función del tamaño de la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 580 ? 2 : 6);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize); // Limpieza del listener
+  }, []);
+
   // Filtrar cargos por área
   const getCargosByArea = (areaId: string) => {
     return cargos.filter(cargo => cargo.idAreaTrabajo === areaId);
@@ -38,7 +47,13 @@ export const Areas = () => {
   const indexOfFirstArea = indexOfLastArea - itemsPerPage;
   const currentAreas = areas.slice(indexOfFirstArea, indexOfLastArea);
   const totalPages = Math.ceil(areas.length / itemsPerPage);
+  
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Función para abrir y cerrar el modal
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <main className='container-render-area'>
@@ -102,10 +117,16 @@ export const Areas = () => {
         </section>
       )}
 
-      {/* Botón flotante */}
-      <button className="fab-button" onClick={() => alert("Agregar nueva área o cargo")}>
+      {/* Botón flotante para abrir el modal */}
+      <button className="fab-button" onClick={toggleModal}>
         <span className="fab-content">+</span>
       </button>
+
+      {/* Modal para registrar áreas y cargos */}
+      <ModalRegisterArea
+        isOpen={isModalOpen}
+        onClose={toggleModal}
+      />
     </main>
   );
 };
