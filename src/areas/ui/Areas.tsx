@@ -73,7 +73,7 @@ export const Areas = () => {
         />
       ) : (
         <section className='cards-container'>
-          <div className='container-fluid '>
+          <div className='container-fluid h-100'>
             <div className='row'>
               {currentAreas.map((area) => (
                 <div key={area.id} className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12'>

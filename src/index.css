@@ -75,13 +75,20 @@ body {
 }
 .ant-modal{
   width: 475px!important;
+  top:0;
+  bottom: 0;
 }
 .ant-modal-content{
   height:520px!important ;
-  overflow-y: scroll;
   padding: 1.5rem;
+  overflow-y: auto;
 }
-
+.subtitulo-modal{
+  font-size: 1.2rem;
+  margin-bottom: 1.1rem;
+  font-weight: bolder;
+  text-align: center;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -101,6 +108,7 @@ body {
   padding: 1.5rem;
   border-radius: 8px;
   width: 475px;
+  height: fit-content;
   max-height: 95%;
   overflow-y: auto;
   position: relative;
@@ -126,6 +134,10 @@ body {
 }
 .container-dos-componentes > .div-register-form {
   width: 48%;
+}
+
+.ant-modal-confirm>div>.modal-content{
+  height: fit-content!important;
 }
 
 /* Animaciones de entrada */
@@ -177,7 +189,7 @@ body {
 .div-register-form {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
+  margin-bottom: 1.3rem;
 }
 .div-register-form > label {
   font-weight: bold;
@@ -344,7 +356,8 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  margin-bottom: 1.3rem;
 }
 .div-agregar-opt>.div-register-form{
   width: 70%!important;
