@@ -54,7 +54,7 @@ const login = async (
             "Es necesario que actualices tu contraseña, se te enviará un correo electrónico para actualizarla.",
           placement: "topRight",
         });
-        logout();
+        await logout();
         return {
           authenticated: false,
           error:
