@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   height: 5vh !important;
+  z-index: 999!important;
 }
 
 .page-button {

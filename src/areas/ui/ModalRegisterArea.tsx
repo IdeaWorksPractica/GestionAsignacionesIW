@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, notification, Popconfirm } from 'antd';
+import { Modal, notification, Popconfirm, Spin } from 'antd';
 import '../../adminUsuarios/ui/admin-usuarios.css';
 import { IPuestoTrabajo, IAreaTrabajo } from '../../shared/models/AdminModels';
-import { registerArea, registerCargos } from '../../shared/services/areas_puestos.services';
+import { registerArea, registerCargos, deleteCargos } from '../../shared/services/areas_puestos.services';
+import trash from '../../../public/icons/trash.svg';
 
 interface ModalRegisterAreaProps {
   isOpen: boolean;
   onClose: () => void;
   selectedArea?: IAreaTrabajo | null;
+  refreshData: () => void;
   initialCargos?: IPuestoTrabajo[];
 }
 
@@ -15,21 +17,36 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
   isOpen,
   onClose,
   selectedArea,
+  refreshData,
   initialCargos = []
 }) => {
   const [nombreArea, setNombreArea] = useState('');
   const [nombrePuesto, setNombrePuesto] = useState('');
   const [rol, setRol] = useState<"Jefe" | "Empleado" | "Admin" | ''>('');
   const [puestos, setPuestos] = useState<IPuestoTrabajo[]>([]);
+  const [puestosARegistrar, setPuestosARegistrar] = useState<IPuestoTrabajo[]>([]);
+  const [puestosAEliminar, setPuestosAEliminar] = useState<IPuestoTrabajo[]>([]);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      // Solo actualizar los estados si `isOpen` cambia a `true`
-      setNombreArea(selectedArea?.nombre || '');
+    if (selectedArea) {
+      setNombreArea(selectedArea.nombre);
       setPuestos(initialCargos);
+    } else {
+      setNombreArea('');
+      setPuestos([]);
     }
-  }, [isOpen, selectedArea, initialCargos]);
+  }, [selectedArea, initialCargos]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setNombreArea('');
+      setPuestos([]);
+      setPuestosARegistrar([]);
+      setPuestosAEliminar([]);
+    }
+  }, [isOpen]);
 
   const handleAddPuesto = () => {
     if (!nombrePuesto || !rol) {
@@ -40,18 +57,26 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
       return;
     }
 
-    setPuestos([...puestos, { id: '', nombre: nombrePuesto, idAreaTrabajo: '', rol }]);
+    const newPuesto = { id: '', nombre: nombrePuesto, idAreaTrabajo: '', rol };
+    setPuestos([...puestos, newPuesto]);
+    setPuestosARegistrar([...puestosARegistrar, newPuesto]);
+
     setNombrePuesto('');
     setRol('');
   };
 
   const handleRemovePuesto = (index: number) => {
-    const updatedPuestos = [...puestos];
-    updatedPuestos.splice(index, 1);
-    setPuestos(updatedPuestos);
+    const puestoToRemove = puestos[index];
+    setPuestos(puestos.filter((_, i) => i !== index));
+
+    if (puestoToRemove.id) {
+      setPuestosAEliminar([...puestosAEliminar, puestoToRemove]);
+    } else {
+      setPuestosARegistrar(puestosARegistrar.filter(p => p !== puestoToRemove));
+    }
   };
 
-  const handleRegisterArea = async () => {
+  const handleRegisterOrUpdateArea = async () => {
     if (!nombreArea || puestos.length === 0) {
       notification.error({
         message: 'Error',
@@ -60,26 +85,57 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
       return;
     }
 
-    const idArea = await registerArea(nombreArea);
-    if (idArea === null) {
-      return;
+    setLoading(true); // Inicia el spinner de carga
+
+    try {
+      if (selectedArea) {
+        await registerCargos(selectedArea.id, puestosARegistrar);
+        
+        if (puestosAEliminar.length > 0) {
+          await deleteCargos(puestosAEliminar);
+        }
+
+        notification.success({
+          message: 'Éxito',
+          description: 'Área y puestos actualizados correctamente.',
+        });
+      } else {
+        const idArea = await registerArea(nombreArea);
+        if (idArea === null) {
+          notification.error({
+            message: 'Error',
+            description: 'Hubo un error al registrar el área, intentelo más tarde.',
+          });
+          return;
+        }
+        await registerCargos(idArea, puestos);
+
+        notification.success({
+          message: 'Éxito',
+          description: 'Área y puestos registrados correctamente.',
+        });
+      }
+
+      setNombreArea('');
+      setPuestos([]);
+      setPuestosARegistrar([]);
+      setPuestosAEliminar([]);
+      refreshData();
+      onClose();
+    } catch (error) {
+      console.error("Error en registro o actualización:", error);
+      notification.error({
+        message: 'Error',
+        description: 'Ocurrió un problema al procesar la solicitud.',
+      });
+    } finally {
+      setLoading(false);
     }
-    await registerCargos(idArea, puestos);
-
-    notification.success({
-      message: 'Éxito',
-      description: 'Área y puestos registrados correctamente.',
-    });
-
-    // Limpiar los campos y cerrar la modal
-    setNombreArea('');
-    setPuestos([]);
-    onClose();
   };
 
   const handleModalClose = () => {
     if (nombreArea || puestos.length > 0) {
-      setShowConfirm(true); // Activa el Popconfirm si hay datos sin guardar
+      setShowConfirm(true);
     } else {
       onClose();
     }
@@ -90,8 +146,10 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
     setTimeout(() => {
       setNombreArea('');
       setPuestos([]);
+      setPuestosARegistrar([]);
+      setPuestosAEliminar([]);
       onClose();
-    }, 100); // Puedes ajustar el tiempo de espera según la necesidad
+    }, 100);
   };
 
   return (
@@ -101,7 +159,9 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
       onCancel={handleModalClose}
       footer={null}
     >
-      <h4 className="text-center fw-bold mb-3">Registrar área</h4>
+      <h4 className="text-center fw-bold mb-3">
+        {selectedArea ? 'Actualizar área' : 'Registrar área'}
+      </h4>
       <div className="div-register-form">
         <label>Nombre área</label>
         <input
@@ -109,6 +169,7 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
           value={nombreArea}
           onChange={(e) => setNombreArea(e.target.value)}
           placeholder="Nombre del área"
+          disabled={!!selectedArea}
         />
       </div>
 
@@ -140,7 +201,7 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
           <tr>
             <th>Puesto de trabajo</th>
             <th>Rol</th>
-            <th>Quitar</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -149,7 +210,9 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
               <td>{puesto.nombre}</td>
               <td>{puesto.rol}</td>
               <td className='text-center'>
-                <button onClick={() => handleRemovePuesto(index)} className="btn btn-close"></button>
+                <button onClick={() => handleRemovePuesto(index)} className="btn p-0">
+                  <img className='img-fluid p-0' src={trash} alt="trash icon" />
+                </button>
               </td>
             </tr>
           ))}
@@ -157,7 +220,9 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
       </table>
 
       <div className="d-flex justify-content-center mt-3">
-        <button onClick={handleRegisterArea} className="btn btn-blue">Registrar área</button>
+        <button onClick={handleRegisterOrUpdateArea} className="btn btn-blue" disabled={loading}>
+          {loading ? <Spin /> : selectedArea ? 'Actualizar área' : 'Registrar área'}
+        </button>
       </div>
 
       <Popconfirm

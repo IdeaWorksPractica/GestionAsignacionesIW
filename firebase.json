@@ -1,8 +1,8 @@
 {
   "functions": [
     {
-      "source": "functions",
-      "codebase": "default",
+      "source": "user_functions",
+      "codebase": "user_functions",
       "ignore": [
         "node_modules",
         ".git",

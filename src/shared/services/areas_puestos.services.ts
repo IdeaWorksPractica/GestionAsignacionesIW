@@ -1,4 +1,4 @@
-import { collection, doc, setDoc, getDocs } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, deleteDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { IAreaTrabajo, IPuestoTrabajo } from "../models/AdminModels";
 import { notification } from "antd";
@@ -110,6 +110,27 @@ async function registerCargos(
   }
 }
 
+// Función para eliminar cargos por ID
+async function deleteCargos(cargosToDelete: IPuestoTrabajo[]) {
+  try {
+    for (const cargo of cargosToDelete) {
+      const cargoRef = doc(db, "cargos", cargo.id);
+      await deleteDoc(cargoRef);
+    }
+    notification.success({
+      message: 'Éxito',
+      description: 'Los cargos seleccionados fueron eliminados correctamente.',
+    });
+  } catch (error) {
+    console.error("Error al eliminar cargos:", error);
+    notification.error({
+      message: 'Error al eliminar',
+      description: 'Hubo un problema al eliminar los cargos seleccionados.',
+    });
+    throw error;
+  }
+}
+
 // Función para normalizar nombres eliminando acentos y poniendo en minúsculas
 function normalizeName(name: string): string {
   return name
@@ -118,4 +139,4 @@ function normalizeName(name: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-export { getAreasInfo, getCargosInfo, registerArea, registerCargos };
+export { getAreasInfo, getCargosInfo, registerArea, registerCargos, deleteCargos };
