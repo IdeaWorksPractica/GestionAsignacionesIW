@@ -71,6 +71,11 @@ const login = async (
             `Bienvenido ${userData.nombre}`,
           placement: "topRight",
         });
+        const userCredentials ={
+          'email': email,
+          'password':password
+        }
+        localStorage.setItem("userCredentials", JSON.stringify(userCredentials));
       }
     }
     return {

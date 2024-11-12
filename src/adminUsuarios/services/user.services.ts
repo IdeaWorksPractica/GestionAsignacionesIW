@@ -3,10 +3,10 @@ import {
   getDocs,
   doc,
   setDoc,
-  updateDoc,
+  updateDoc
 } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,setPersistence,signInWithEmailAndPassword, browserSessionPersistence, browserLocalPersistence } from "firebase/auth";
 import { notification } from "antd";
 import { IPuestoTrabajo, IAreaTrabajo } from "../../shared/models/AdminModels";
 import {
@@ -83,14 +83,17 @@ async function registerUser(
   }
 ) {
   const auth = getAuth();
+  const originalPersistence = browserLocalPersistence;
   try {
+    await setPersistence(auth, browserSessionPersistence);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
     const userId = userCredential.user.uid;
-
+    const userLogged = JSON.parse(localStorage.getItem('userCredentials'));
+    await signInWithEmailAndPassword(auth, userLogged.email, userLogged.password)
     const usuarioRef = doc(db, "usuarios", userId);
     await setDoc(usuarioRef, {
       uid: userId,
@@ -114,6 +117,9 @@ async function registerUser(
     });
     console.error("Error al registrar usuario:", error);
     throw error;
+  }
+  finally{
+    await setPersistence(auth, originalPersistence);
   }
 }
 

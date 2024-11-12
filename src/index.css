@@ -79,9 +79,29 @@ body {
   bottom: 0;
 }
 .ant-modal-content{
-  height:520px!important ;
+  height:fit-content;
+  max-height: 90vh!important;
   padding: 1.5rem;
   overflow-y: auto;
+}
+
+/* Estilo del scrollbar */
+.ant-modal-content::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Fondo del scrollbar */
+.ant-modal-content::-webkit-scrollbar-track {
+  background: white!important; /* Fondo transparente */
+  border-radius: 0px 25px 25px 0px;
+}
+
+/* Barra de desplazamiento */
+.ant-modal-content::-webkit-scrollbar-thumb {
+  background-color: #9e9a9a; /* Color del scrollbar */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 2px solid transparent; /* Espacio alrededor del scrollbar */
+  background-clip: content-box; /* Hace que el borde no invada el scrollbar */
 }
 .subtitulo-modal{
   font-size: 1.2rem;
