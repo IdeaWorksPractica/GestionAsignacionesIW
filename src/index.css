@@ -2,10 +2,8 @@
 body {
   font-family: "Rubik";
 }
-.ant-list{
-  height: 60%!important;
-  border: none;
-  overflow-y: auto;
+.cards-heigth{
+  height: 50%;
 }
 
 .container-render-area {
@@ -14,7 +12,7 @@ body {
 }
 .title-container {
   position: fixed;
-  width: 100%;
+  width: 100vw;
   height: 9vh;
   background-color: #d9d9d9;
   display: flex;
@@ -330,6 +328,9 @@ body {
 }
 
 @media (width<580px) {
+  .cards-heigth{
+    height: 100%;
+  }
   .title-container {
    z-index: 0; 
 }

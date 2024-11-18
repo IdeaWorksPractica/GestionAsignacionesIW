@@ -5,8 +5,10 @@ import { getAreasInfo, getCargosInfo } from "../../shared/services/areas_puestos
 import { IAreaTrabajo, IPuestoTrabajo } from "../../shared/models/AdminModels";
 import { ModalRegisterArea } from './ModalRegisterArea';
 import { Pagination } from "../../shared/ui/Pagination";
+import { getScreenWidthMinusOffset } from "../../shared/services/title.service";
 
 export const Areas = () => {
+  const [titleWidth, setWidth] = useState<number>();
   const [areas, setAreas] = useState<IAreaTrabajo[]>([]);
   const [cargos, setCargos] = useState<IPuestoTrabajo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,7 @@ export const Areas = () => {
 
   // Función para obtener datos de áreas y cargos
   const getInfo = async () => {
+    setWidth(getScreenWidthMinusOffset());
     setLoading(true);
     const areasData = await getAreasInfo();
     const cargosData = await getCargosInfo();
@@ -66,7 +69,7 @@ export const Areas = () => {
 
   return (
     <main className='container-render-area'>
-      <section className='title-container'>
+      <section className='title-container' style={{width:`${titleWidth}px`}}>
         <p>Áreas y Cargos</p>
       </section>
 
@@ -89,7 +92,7 @@ export const Areas = () => {
               {currentAreas.map((area) => (
                 <div
                   key={area.id}
-                  className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 h-50'
+                  className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 cards-heigth'
                   onClick={() => toggleModal(area)}
                 >
                   <div className='card-user'>
@@ -98,9 +101,8 @@ export const Areas = () => {
                     </div>
                     <div className='info-card-container'>
                       <span className="mb-2 fw-bold">Cargos:</span>
-                      <div className="h-25">
+                      <div style={{ height: '20%', overflowY: 'auto' }}>
                       <List
-                        className="h-100"
                         dataSource={getCargosByArea(area.id)}
                         renderItem={(cargo) => (
                           <List.Item>
@@ -108,10 +110,8 @@ export const Areas = () => {
                           </List.Item>
                         )}
                         size="small"
-                        bordered
                       />
                       </div>
-                      
                     </div>
                   </div>
                 </div>

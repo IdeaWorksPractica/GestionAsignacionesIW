@@ -6,8 +6,10 @@ import { Spin } from 'antd';
 import { IUser } from '../../shared/models/IUsuario';
 import { UserRegisterModal } from './UserRegisterModal';
 import { Pagination } from '../../shared/ui/Pagination';
+import { getScreenWidthMinusOffset } from '../../shared/services/title.service';
 
 export const AdminUsuarios = () => {
+  const [titleWidth, setWidth] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
@@ -19,6 +21,7 @@ export const AdminUsuarios = () => {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   const getInfo = async () => {
+    setWidth(getScreenWidthMinusOffset());
     setLoading(true);
     const usersData = await getUsersInfo();
     setUsers(usersData);
@@ -72,7 +75,7 @@ export const AdminUsuarios = () => {
 
   return (
     <main className='container-render-area'>
-      <section className='title-container'>
+      <section className='title-container'  style={{width:`${titleWidth}px`}}>
         <p>Usuarios</p>
       </section>
 
@@ -116,7 +119,7 @@ export const AdminUsuarios = () => {
           <div className='container-fluid users-cards-section'>
             <div className='row'>
               {currentUsers.map((user) => (
-                <div key={user.uid} className='col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12' onClick={() => toggleModal(user)}>
+                <div key={user.uid} className='col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12 cards-heigth' onClick={() => toggleModal(user)}>
                   <div className='card-user'>
                     <div className='title-cards'>
                       <span>{user.nombre}</span>
