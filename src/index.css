@@ -2,6 +2,11 @@
 body {
   font-family: "Rubik";
 }
+.ant-list{
+  height: 60%!important;
+  border: none;
+  overflow-y: auto;
+}
 
 .container-render-area {
   width: 100%;

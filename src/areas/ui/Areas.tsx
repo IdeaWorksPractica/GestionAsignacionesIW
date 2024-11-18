@@ -85,11 +85,11 @@ export const Areas = () => {
       ) : (
         <section className='cards-container'>
           <div className='container-fluid h-100'>
-            <div className='row'>
+            <div className='row h-100'>
               {currentAreas.map((area) => (
                 <div
                   key={area.id}
-                  className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12'
+                  className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 h-50'
                   onClick={() => toggleModal(area)}
                 >
                   <div className='card-user'>
@@ -98,7 +98,9 @@ export const Areas = () => {
                     </div>
                     <div className='info-card-container'>
                       <span className="mb-2 fw-bold">Cargos:</span>
+                      <div className="h-25">
                       <List
+                        className="h-100"
                         dataSource={getCargosByArea(area.id)}
                         renderItem={(cargo) => (
                           <List.Item>
@@ -108,6 +110,8 @@ export const Areas = () => {
                         size="small"
                         bordered
                       />
+                      </div>
+                      
                     </div>
                   </div>
                 </div>
