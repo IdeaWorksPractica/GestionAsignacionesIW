@@ -18,6 +18,7 @@ export const Home = () => {
       const user = await getInfoUser();
       if (user) {
         setUserData(user);
+        console.log("Rol del usuario:", user.puestoTrabajoDetalle?.rol);
         setRol(user.puestoTrabajoDetalle?.rol ?? "");
       }
       setLoading(false);
@@ -44,7 +45,7 @@ export const Home = () => {
 
   const handleNavigation = (path: To) => {
     navigate(path);
-    setVisible(false); 
+    setVisible(false);
   };
 
   return (
@@ -74,7 +75,9 @@ export const Home = () => {
                   <div className="opt-container">
                     <button
                       className={`option ${
-                        location.pathname === "/home/admin-areas" ? "active" : ""
+                        location.pathname === "/home/admin-areas"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/admin-areas")}
                     >
@@ -82,7 +85,9 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
-                        location.pathname === "/home/asignaciones" ? "active" : ""
+                        location.pathname === "/home/asignaciones"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/asignaciones")}
                     >
@@ -90,11 +95,27 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
-                        location.pathname === "/home/admin-usuarios" ? "active" : ""
+                        location.pathname === "/home/admin-usuarios"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/admin-usuarios")}
                     >
                       Usuarios
+                    </button>
+                  </div>
+                )}
+                 {userRol === "Empleado" && (
+                  <div className="opt-container">
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/asignaciones"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
                     </button>
                   </div>
                 )}
@@ -107,13 +128,12 @@ export const Home = () => {
             </section>
             <section className="renderSection">
               <div className="div-mobile-menu-button">
-              <Button
-                type="primary"
-                icon={<MenuOutlined />}
-                onClick={showDrawer}
-                className="mobile-menu-button"
-              >
-              </Button>
+                <Button
+                  type="primary"
+                  icon={<MenuOutlined />}
+                  onClick={showDrawer}
+                  className="mobile-menu-button"
+                ></Button>
               </div>
               <Outlet /> {/* Aquí se renderizan las rutas secundarias */}
             </section>
@@ -130,7 +150,10 @@ export const Home = () => {
             <div className="sidebar-content">
               <div className="info-sideBar">
                 <section className="section-btn-drawer">
-                  <button onClick={closeDrawer} className="btn btn-close-offcanvas">
+                  <button
+                    onClick={closeDrawer}
+                    className="btn btn-close-offcanvas"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="icon icon-tabler icon-tabler-x"
@@ -159,7 +182,9 @@ export const Home = () => {
                   <div className="opt-container">
                     <button
                       className={`option ${
-                        location.pathname === "/home/admin-areas" ? "active" : ""
+                        location.pathname === "/home/admin-areas"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/admin-areas")}
                     >
@@ -167,7 +192,9 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
-                        location.pathname === "/home/asignaciones" ? "active" : ""
+                        location.pathname === "/home/asignaciones"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/asignaciones")}
                     >
@@ -175,11 +202,27 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
-                        location.pathname === "/home/admin-usuarios" ? "active" : ""
+                        location.pathname === "/home/admin-usuarios"
+                          ? "active"
+                          : ""
                       }`}
                       onClick={() => handleNavigation("/home/admin-usuarios")}
                     >
                       Usuarios
+                    </button>
+                  </div>
+                )}
+                {userRol === "Empleado" && (
+                  <div className="opt-container">
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/asignaciones"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
                     </button>
                   </div>
                 )}
