@@ -129,15 +129,15 @@ export const AdminUsuarios = () => {
                         <img src={EditIcon} alt="Edit icon" />
                       </div>
                       <div className='mb-2'>
-                        <span>Correo:</span><br/>
+                        <span className='fw-bold'>Correo:</span><br/>
                         <span>{user.correoElectronico}</span>
                       </div>
                       <div className='mb-2'>
-                        <span>Area:</span><br/>
+                        <span className='fw-bold' >Area:</span><br/>
                         <span>{user.areaTrabajo}</span>
                       </div>
                       <div className='mb-2'>
-                        <span>Puesto:</span><br/>
+                        <span className='fw-bold'>Puesto:</span><br/>
                         <span>{user.puestoTrabajo}</span>
                       </div>
                     </div>

@@ -76,6 +76,21 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
     }
   };
 
+  const showConfirmation = () => {
+    Modal.confirm({
+      title: selectedArea ? 'Actualizar Area' : 'Registrar Area',
+      content: (
+        <div className="custom-confirm-content">
+          {`¿Estás seguro de que deseas ${selectedArea ? 'actualizar' : 'registrar'} esta area?`}
+        </div>
+      ),
+      className: 'custom-confirm-modal',
+      okText: 'Sí',
+      cancelText: 'No',
+      onOk: handleRegisterOrUpdateArea,
+    });
+  };
+
   const handleRegisterOrUpdateArea = async () => {
     if (!nombreArea || puestos.length === 0) {
       notification.error({
@@ -220,7 +235,7 @@ export const ModalRegisterArea: React.FC<ModalRegisterAreaProps> = ({
       </table>
 
       <div className="d-flex justify-content-center mt-3">
-        <button onClick={handleRegisterOrUpdateArea} className="btn btn-blue" disabled={loading}>
+        <button onClick={showConfirmation} className="btn btn-blue" disabled={loading}>
           {loading ? <Spin /> : selectedArea ? 'Actualizar área' : 'Registrar área'}
         </button>
       </div>

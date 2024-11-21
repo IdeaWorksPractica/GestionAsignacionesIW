@@ -5,6 +5,26 @@ body {
 .cards-heigth{
   height: 50%;
 }
+.div-list-container{
+  height: 75%;
+  overflow-y: auto;
+}
+.div-list-container::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Fondo del scrollbar */
+.div-list-container::-webkit-scrollbar-track {
+  border-radius: 0px 25px 25px 0px;
+}
+
+/* Barra de desplazamiento */
+.div-list-container::-webkit-scrollbar-thumb {
+  background-color: #9e9a9a; /* Color del scrollbar */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 2px solid transparent; /* Espacio alrededor del scrollbar */
+  background-clip: content-box; /* Hace que el borde no invada el scrollbar */
+}
 
 .container-render-area {
   width: 100%;
@@ -357,7 +377,8 @@ body {
     grid-template-rows: 90% 10%;
   }
   .ant-list-empty-text{
-    padding: 0!important;
+    padding-top: 0px!important;
+    padding-bottom: 0px!important;
   }
   .ant-modal-content{
     padding: 1.1rem;

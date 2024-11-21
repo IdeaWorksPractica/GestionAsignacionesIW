@@ -99,9 +99,9 @@ export const Areas = () => {
                     <div className='title-cards'>
                       <span>{area.nombre}</span>
                     </div>
-                    <div className='info-card-container'>
+                    <div className='info-card-container h-100'>
                       <span className="mb-2 fw-bold">Cargos:</span>
-                      <div style={{ height: '20%', overflowY: 'auto' }}>
+                      <div className="div-list-container">
                       <List
                         dataSource={getCargosByArea(area.id)}
                         renderItem={(cargo) => (
