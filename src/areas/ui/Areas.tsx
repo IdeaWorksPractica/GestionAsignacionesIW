@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import '../../adminUsuarios/ui/admin-usuarios.css';
+import '../../shared/styles/admin-usuarios.css'
 import { Spin, List } from "antd";
 import { getAreasInfo, getCargosInfo } from "../../shared/services/areas_puestos.services";
 import { IAreaTrabajo, IPuestoTrabajo } from "../../shared/models/AdminModels";

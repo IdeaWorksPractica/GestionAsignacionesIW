@@ -4,7 +4,20 @@ export interface IAsignacion {
   descripcion: string;
   fechaInicio: Date;
   fechaFin: Date;
-  usuariosAsignados: string[];
-  areaTrabajo?: string;
   creadoPor: string;
+}
+
+export interface IasigacionesXusuario{
+  id:string;
+  uid:string;
+  id_asignacion:string;
+  estado:'Sin Iniciar' | 'En Proceso' | 'Terminada';
+}
+
+export interface IComentarioAsignacion {
+  id: string; 
+  id_asignacion: string; 
+  uid_usuario: string;
+  contenido: string;
+  fechaCreacion: Date;
 }

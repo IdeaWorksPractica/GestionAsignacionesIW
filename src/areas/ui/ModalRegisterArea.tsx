@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, notification, Popconfirm, Spin } from 'antd';
-import '../../adminUsuarios/ui/admin-usuarios.css';
+import '../../shared/styles/admin-usuarios.css'
 import { IPuestoTrabajo, IAreaTrabajo } from '../../shared/models/AdminModels';
 import { registerArea, registerCargos, deleteCargos } from '../../shared/services/areas_puestos.services';
 import trash from '../../../public/icons/trash.svg';

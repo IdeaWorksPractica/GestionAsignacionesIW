@@ -1,0 +1,16 @@
+.ant-picker{
+    height: 100%!important;
+    width: 100%!important;
+    background-color: none!important;
+    color: #757A92!important;
+}
+.ant-picker:hover{
+    height: 100%!important;
+    width: 100%!important;
+    background-color: transparent!important;
+}
+.ant-picker:focus{
+    height: 100%!important;
+    width: 100%!important;
+    background-color: transparent!important;
+}

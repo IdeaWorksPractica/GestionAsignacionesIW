@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './admin-usuarios.css';
+import '../../shared/styles/admin-usuarios.css'
 import EditIcon from '../../../public/editIcon.svg';
 import { getUsersInfo } from '../services/user.services';
 import { Spin } from 'antd';
