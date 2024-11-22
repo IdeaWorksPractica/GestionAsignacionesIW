@@ -12,8 +12,10 @@ import {
 } from '../services/asignaciones.service';
 import { IAsignacion } from '../../shared/models/IAsignaciones';
 import moment from 'moment';
+import { IUser } from '../../shared/models/IUsuario';
 
 export const Asignaciones = () => {
+  const [userLogged, setUserLogged] = useState<IUser|null>(null)
   const [titleWidth, setWidth] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [userRol, setRol] = useState<string>('');
@@ -29,6 +31,7 @@ export const Asignaciones = () => {
   const getInfo = async () => {
     setLoading(true);
     const user = await getInfoUser();
+    setUserLogged(user)
     setRol(user?.puestoTrabajoDetalle?.rol ?? '');
     setWidth(getScreenWidthMinusOffset());
 
@@ -91,7 +94,6 @@ export const Asignaciones = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedAsignacion(null);
-    getInfo(); // Refrescar datos después de cerrar el modal
   };
 
   const indexOfLastAsignacion = currentPage * itemsPerPage;
@@ -200,10 +202,11 @@ export const Asignaciones = () => {
         </>
       )}
       <ModalRegisterAsignacion
+        loggedUser={userLogged}
         isOpen={isModalOpen}
         onClose={handleModalClose}
         selectedAsignacion={selectedAsignacion}
-        refreshData={getInfo}
+        refreshData={()=>{handleModalClose(), getInfo()}}
       />
     </main>
   );

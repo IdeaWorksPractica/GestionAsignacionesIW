@@ -7,14 +7,14 @@ import {
   actualizarAsignacion,
   obtenerAsignacionesPorUsuario,
 } from '../services/asignaciones.service';
+import { IUser } from '../../shared/models/IUsuario';
 
 interface ModalRegisterAsignacionProps {
   isOpen: boolean;
   onClose: () => void;
   selectedAsignacion?: IAsignacion | null;
   refreshData: () => void;
-  areaTrabajo: string; // Área de trabajo del usuario que registra la asignación
-  puestoTrabajo: string; // Puesto de trabajo del usuario que registra la asignación
+  loggedUser: IUser | null;
 }
 
 export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = ({
@@ -22,8 +22,7 @@ export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = (
   onClose,
   selectedAsignacion,
   refreshData,
-  areaTrabajo,
-  puestoTrabajo,
+  loggedUser,
 }) => {
   const [nombreAsignacion, setNombreAsignacion] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -72,17 +71,23 @@ export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = (
   const fetchUsuariosDisponibles = async () => {
     try {
       const allUsuarios = await getUsersInfo();
+      const usuarioLogueado =allUsuarios.find(user => user.uid === loggedUser?.uid);
+
+      console.log('User Logged:',loggedUser)
+      console.log('Todos los usuarios:', allUsuarios);
 
       // Filtrar usuarios según las reglas
       const usuariosFiltrados = allUsuarios.filter((user) => {
-        // Regla 1: Si el puesto es "Project Manager", incluir usuarios del área "Creatividad".
-        if (puestoTrabajo === 'Project Manager' && user.areaTrabajo === 'Creatividad') {
+        // Regla 1: Si el puesto del usuario logueado es "Project Manager", incluir usuarios del área "Creatividad".
+        if (loggedUser?.puestoTrabajoDetalle?.nombre === 'Project Manager' && user.areaTrabajo === 'Creatividad') {
           return true;
         }
 
-        // Regla 2: Incluir usuarios del área de trabajo del usuario que registra.
-        return user.areaTrabajo === areaTrabajo;
+        // Regla 2: Incluir usuarios del área de trabajo del usuario logueado.
+        return user.areaTrabajo === usuarioLogueado?.areaTrabajo;
       });
+
+      console.log('Usuarios filtrados:', usuariosFiltrados);
 
       setUsuariosDisponibles(
         usuariosFiltrados.map((user) => ({
@@ -147,7 +152,7 @@ export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = (
             descripcion,
             fechaInicio: new Date(fechaInicio),
             fechaFin: new Date(fechaFin),
-            creadoPor: 'adminUid', // Este valor puede venir del contexto de autenticación
+            creadoPor: loggedUser.uid, // Utilizamos el UID del usuario logueado
           },
           usuarios
         );
@@ -177,7 +182,6 @@ export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = (
         {selectedAsignacion ? 'Actualizar Asignación' : 'Registrar Asignación'}
       </h4>
 
-      {/* Formulario */}
       <div className="div-register-form">
         <label>Nombre</label>
         <input
@@ -212,7 +216,6 @@ export const ModalRegisterAsignacion: React.FC<ModalRegisterAsignacionProps> = (
         />
       </div>
 
-      {/* Usuarios */}
       <div className="div-register-form">
         <label>Usuarios</label>
         <select
