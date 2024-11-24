@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './asignaciones.css';
 import '../../shared/styles/admin-usuarios.css';
 import { getScreenWidthMinusOffset } from '../../shared/services/title.service';
@@ -15,7 +15,7 @@ import moment from 'moment';
 import { IUser } from '../../shared/models/IUsuario';
 
 export const Asignaciones = () => {
-  const [userLogged, setUserLogged] = useState<IUser|null>(null)
+  const [userLogged, setUserLogged] = useState<IUser | null>(null);
   const [titleWidth, setWidth] = useState<number>();
   const [loading, setLoading] = useState(true);
   const [userRol, setRol] = useState<string>('');
@@ -31,7 +31,7 @@ export const Asignaciones = () => {
   const getInfo = async () => {
     setLoading(true);
     const user = await getInfoUser();
-    setUserLogged(user)
+    setUserLogged(user);
     setRol(user?.puestoTrabajoDetalle?.rol ?? '');
     setWidth(getScreenWidthMinusOffset());
 
@@ -51,6 +51,15 @@ export const Asignaciones = () => {
 
   useEffect(() => {
     getInfo();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 580 ? 2 : 6);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,7 +156,7 @@ export const Asignaciones = () => {
             </div>
           </div>
           <div className="container-fluid users-cards-section">
-            <div className="row">
+            <div className="row h-100">
               {currentAsignaciones.length > 0 ? (
                 currentAsignaciones.map((asignacion) => (
                   <div
@@ -155,7 +164,7 @@ export const Asignaciones = () => {
                     className="col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12 cards-heigth"
                     onClick={() => handleCardClick(asignacion)}
                   >
-                    <div className="card-user">
+                    <div className="card-user ">
                       <div className="title-cards">
                         <span>{asignacion.nombre}</span>
                       </div>
@@ -163,7 +172,7 @@ export const Asignaciones = () => {
                         <div className="mb-2">
                           <span className="fw-bold">Descripción:</span>
                           <br />
-                          <span>{asignacion.descripcion}</span>
+                          <span className='truncated-text'>{asignacion.descripcion}</span>
                         </div>
                         <div className="mb-2">
                           <span className="fw-bold">Fecha Inicio:</span>
@@ -206,7 +215,10 @@ export const Asignaciones = () => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         selectedAsignacion={selectedAsignacion}
-        refreshData={()=>{handleModalClose(), getInfo()}}
+        refreshData={() => {
+          handleModalClose();
+          getInfo();
+        }}
       />
     </main>
   );

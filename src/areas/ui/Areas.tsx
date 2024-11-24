@@ -92,7 +92,7 @@ export const Areas = () => {
               {currentAreas.map((area) => (
                 <div
                   key={area.id}
-                  className='col-12 col-xl-3 col-lg-3 col-md-6 col-sm-12 cards-heigth'
+                  className='col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12 cards-heigth'
                   onClick={() => toggleModal(area)}
                 >
                   <div className='card-user'>

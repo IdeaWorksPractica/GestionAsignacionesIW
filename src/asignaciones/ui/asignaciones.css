@@ -1,16 +1,25 @@
-.ant-picker{
-    height: 100%!important;
-    width: 100%!important;
-    background-color: none!important;
-    color: #757A92!important;
+.ant-picker {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: none !important;
+  color: #757a92 !important;
 }
-.ant-picker:hover{
-    height: 100%!important;
-    width: 100%!important;
-    background-color: transparent!important;
+.ant-picker:hover {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: transparent !important;
 }
-.ant-picker:focus{
-    height: 100%!important;
-    width: 100%!important;
-    background-color: transparent!important;
+.ant-picker:focus {
+  height: 100% !important;
+  width: 100% !important;
+  background-color: transparent !important;
+}
+.truncated-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden; /* Oculta el contenido extra */
+  text-overflow: ellipsis; /* Agrega "..." al final si se corta el texto */
+  white-space: normal; /* Permite que el texto haga saltos de línea */
 }
