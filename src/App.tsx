@@ -12,7 +12,7 @@ import { getInfoUser, checkActiveSession } from "./auth/services/auth.services";
 import { AdminUsuarios } from "./adminUsuarios/ui/AdminUsuarios";
 import { Areas } from "./areas/ui/Areas";
 import { Asignaciones } from "./asignaciones/ui/Asignaciones";
-
+import  Calendar  from "./calendar/ui/Calendar";
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,6 +30,7 @@ const App: React.FC = () => {
             "/home/asignaciones",
             "/home/admin-usuarios",
             "/home/admin-areas",
+            "/home/calendar",
           ];
         }
         if (!allowedPaths.includes(location.pathname)) {
@@ -51,6 +52,7 @@ const App: React.FC = () => {
         <Route path="asignaciones" element={<Asignaciones />} />
         <Route path="admin-usuarios" element={<AdminUsuarios />} />
         <Route path="admin-areas" element={<Areas />} />
+        <Route path="calendar" element={<Calendar />} />
       </Route>
     </Routes>
   );

@@ -75,6 +75,16 @@ export const Home = () => {
                   <div className="opt-container">
                     <button
                       className={`option ${
+                        location.pathname === "/home/calendar"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/calendar")}
+                    >
+                      Calendario
+                    </button>
+                    <button
+                      className={`option ${
                         location.pathname === "/home/admin-areas"
                           ? "active"
                           : ""
@@ -182,13 +192,23 @@ export const Home = () => {
                   <div className="opt-container">
                     <button
                       className={`option ${
+                        location.pathname === "/home/calendario"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/calendario")}
+                    >
+                      Calendario
+                    </button>
+                    <button
+                      className={`option ${
                         location.pathname === "/home/admin-areas"
                           ? "active"
                           : ""
                       }`}
                       onClick={() => handleNavigation("/home/admin-areas")}
                     >
-                      Gestión de áreas
+                      Gestión de áreasssss
                     </button>
                     <button
                       className={`option ${
