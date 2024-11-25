@@ -44,13 +44,10 @@ export const ModalRegisterAsignacion: React.FC<
   useEffect(() => {
     const cargarDatos = async () => {
       if (!isOpen) return;
-
       setLoadingUser(true);
       resetForm();
-
       try {
         await fetchUsuariosDisponibles();
-
         if (selectedAsignacion) {
           await cargarUsuariosAsignados();
           setNombreAsignacion(selectedAsignacion.nombre);
