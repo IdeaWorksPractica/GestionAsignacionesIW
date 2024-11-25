@@ -98,7 +98,7 @@ export const Login = () => {
     try {
       const response = await login(email, password);
       if (response.authenticated) {
-        navigate("/home");
+        navigate("/home/asignaciones");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

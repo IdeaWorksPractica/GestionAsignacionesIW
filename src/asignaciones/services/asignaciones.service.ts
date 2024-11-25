@@ -23,23 +23,31 @@ async function crearAsignacion(asignacion: IAsignacion, usuarios: string[]): Pro
   try {
     const asignacionRef = doc(asignacionesCollection);
     await setDoc(asignacionRef, { ...asignacion, id: asignacionRef.id });
-
-    for (const uid of usuarios) {
-      const asignacionUsuarioRef = doc(asignacionesXUsuarioCollection);
-      const asignacionXUsuario: IasigacionesXusuario = {
-        id: asignacionUsuarioRef.id,
-        uid,
-        id_asignacion: asignacionRef.id,
-        estado: "Sin Iniciar",
-      };
-      await setDoc(asignacionUsuarioRef, asignacionXUsuario);
-    }
+    await crearAsignacionXusuario(asignacionRef.id, usuarios);
   } catch (error) {
     console.error("Error al crear la asignación:", error);
     throw error;
   }
 }
 
+async function crearAsignacionXusuario(id:string, usuarios:string[]):Promise<void>{
+  try {
+    for (const uid of usuarios) {
+      const asignacionUsuarioRef = doc(asignacionesXUsuarioCollection);
+      const asignacionXUsuario: IasigacionesXusuario = {
+        id: asignacionUsuarioRef.id,
+        uid,
+        id_asignacion: id,
+        estado: "Sin Iniciar",
+      };
+      await setDoc(asignacionUsuarioRef, asignacionXUsuario);
+    }
+  } catch (error) {
+    console.error("Error al crear la asignaciones por usuario:", error);
+    throw error;
+  }
+
+}
 // Leer todas las asignaciones
 async function obtenerAsignaciones(): Promise<IAsignacion[]> {
   try {
@@ -314,5 +322,6 @@ export {
   actualizarComentario,
   eliminarComentario,
   obtenerUsuariosPorAsignacion,
-  eliminarAsignacionesPorUsuarios
+  eliminarAsignacionesPorUsuarios,
+  crearAsignacionXusuario
 };
