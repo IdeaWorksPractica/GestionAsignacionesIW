@@ -11,6 +11,7 @@ import { Home } from "./home/ui/main/home";
 import { getInfoUser, checkActiveSession } from "./auth/services/auth.services";
 import { AdminUsuarios } from "./adminUsuarios/ui/AdminUsuarios";
 import { Areas } from "./areas/ui/Areas";
+import { MostrarAsignacion } from "./asignaciones/ui/Mostrar-asignacion/MostrarAsignacion";
 import { Asignaciones } from "./asignaciones/ui/Asignaciones";
 import  Calendar  from "./calendar/ui/Calendar";
 const App: React.FC = () => {
@@ -50,6 +51,7 @@ const App: React.FC = () => {
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />}>
         <Route path="asignaciones" element={<Asignaciones />} />
+        <Route path="asignacion/:id" element={<Asignaciones />} />
         <Route path="admin-usuarios" element={<AdminUsuarios />} />
         <Route path="admin-areas" element={<Areas />} />
         <Route path="calendar" element={<Calendar />} />

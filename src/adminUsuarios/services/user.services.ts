@@ -1,6 +1,7 @@
 import {
   collection,
   getDocs,
+  getDoc,
   doc,
   setDoc,
   updateDoc
@@ -68,6 +69,71 @@ async function getUsersInfo() {
   } catch (error) {
     console.error("Error fetching users:", error);
     return [];
+  }
+}
+
+async function getUserById(uid: string): Promise<{
+  uid: string;
+  correoElectronico: string;
+  nombre: string;
+  areaId: string;
+  areaTrabajo: string;
+  puestoId: string;
+  puestoTrabajo: string;
+} | null> {
+  try {
+    // Obtener información de áreas y puestos
+    const cargosArray = await getCargosInfo();
+    const areasArray = await getAreasInfo();
+
+    // Mapas de áreas y puestos
+    const cargosMap = cargosArray.reduce((map, cargo) => {
+      map[cargo.id] = cargo;
+      return map;
+    }, {} as { [key: string]: IPuestoTrabajo });
+
+    const areasMap = areasArray.reduce((map, area) => {
+      map[area.id] = area;
+      return map;
+    }, {} as { [key: string]: IAreaTrabajo });
+
+    // Obtener el documento del usuario por `uid`
+    const userRef = doc(db, "usuarios", uid);
+    const userSnapshot = await getDoc(userRef);
+
+    if (!userSnapshot.exists()) {
+      notification.error({
+        message: "Usuario no encontrado",
+        description: `No se encontró un usuario con el ID ${uid}`,
+        placement: "topRight",
+      });
+      return null;
+    }
+
+    const userData = userSnapshot.data();
+
+    // Mapear área y puesto a nombres
+    const userArea = areasMap[userData.areaTrabajo]?.nombre || "Área no encontrada";
+    const userPuesto = cargosMap[userData.puestoTrabajo]?.nombre || "Puesto no encontrado";
+
+    // Retornar los datos del usuario con los nombres mapeados
+    return {
+      uid,
+      correoElectronico: userData.correoElectronico,
+      nombre: userData.nombre,
+      areaId: userData.areaTrabajo,
+      areaTrabajo: userArea,
+      puestoId: userData.puestoTrabajo,
+      puestoTrabajo: userPuesto,
+    };
+  } catch (error) {
+    notification.error({
+      message: "Error al obtener usuario",
+      description: "Hubo un error al obtener los datos del usuario.",
+      placement: "topRight",
+    });
+    console.error("Error al obtener usuario por ID:", error);
+    throw error;
   }
 }
 
@@ -161,5 +227,6 @@ async function updateUserInfo(
 export{
   getUsersInfo,
   registerUser,
-  updateUserInfo
+  updateUserInfo,
+  getUserById
 }
