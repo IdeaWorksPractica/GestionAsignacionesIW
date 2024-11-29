@@ -180,7 +180,7 @@ export const Asignaciones = () => {
                       <div className="title-cards">
                         <span>{asignacion.nombre}</span>
                       </div>
-                      <div className="info-card-container pt-0">
+                      <div className="info-card-container">
                         <div className="mb-2">
                           <span className="fw-bold">Descripción:</span>
                           <br />

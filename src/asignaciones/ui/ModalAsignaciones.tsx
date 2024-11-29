@@ -125,24 +125,38 @@ export const ModalRegisterAsignacion: React.FC<
 
   const cargarUsuariosAsignados = async () => {
     if (!selectedAsignacion) return;
-
+  
     try {
-      const usuariosAsignadosIds = await obtenerUsuariosPorAsignacion(
+      // Obtener usuarios asignados a la asignación específica
+      const usuariosAsignadosData = await obtenerUsuariosPorAsignacion(
         selectedAsignacion.id
       );
-
+  
+      console.log(usuariosAsignadosData); // [{ uid, idAsignacionXUsuario }]
+  
+      // Obtener información de todos los usuarios
       const allUsuarios = await getUsersInfo();
-
-      const usuariosAsignados = usuariosAsignadosIds
-        .map((uid) => {
-          const usuarioInfo = allUsuarios.find((user) => user.uid === uid);
+  
+      // Mapear usuarios asignados con la información completa y añadir idAsignacionXUsuario
+      const usuariosAsignados = usuariosAsignadosData
+        .map((asignacion) => {
+          const usuarioInfo = allUsuarios.find((user) => user.uid === asignacion.uid);
           if (usuarioInfo) {
-            return { uid, nombre: usuarioInfo.nombre };
+            return {
+              uid: asignacion.uid, // ID del usuario
+              nombre: usuarioInfo.nombre, // Nombre del usuario
+              idAsignacionXUsuario: asignacion.idAsignacionXUsuario, // ID de asignación
+            };
           }
           return null;
         })
-        .filter((user) => user !== null) as { uid: string; nombre: string }[];
-
+        .filter((user) => user !== null) as {
+        uid: string;
+        nombre: string;
+        idAsignacionXUsuario: string;
+      }[];
+  
+      // Actualizar estado con usuarios seleccionados
       setUsuariosSeleccionados(usuariosAsignados);
     } catch (error) {
       console.error("Error al cargar usuarios asignados:", error);
@@ -152,6 +166,7 @@ export const ModalRegisterAsignacion: React.FC<
       });
     }
   };
+  
 
   const handleAddUsuario = (uid: string) => {
     const usuario = usuariosDisponibles.find((u) => u.uid === uid);
@@ -336,7 +351,6 @@ export const ModalRegisterAsignacion: React.FC<
   </option>
   {usuariosDisponibles.length > 0 ? (
     usuariosDisponibles.map((user) => {
-      console.log("Renderizando usuario:", user); // Depuración
       return (
         <option key={user.uid} value={user.uid}>
           {user.nombre} - {user.areaTrabajo}

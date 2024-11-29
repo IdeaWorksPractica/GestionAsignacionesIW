@@ -1,0 +1,22 @@
+/* Estilo normal */
+.fc-direction-ltr .fc-daygrid-event.fc-event-start, 
+.fc-daygrid-event.fc-event-end {
+    height: 80%; /* Ajusta el valor inicial de la altura */
+    padding: 8px; /* Ajusta el padding inicial */
+    transition: all 0.3s ease; /* Animación suave para el cambio de tamaño */
+}
+
+/* Hover para aumentar el tamaño */
+.fc-direction-ltr:hover .fc-daygrid-event.fc-event-start:hover, 
+.fc-daygrid-event.fc-event-end:hover {
+    height: 100%; /* Aumenta la altura en hover */
+    padding: 10px; /* Aumenta el padding en hover */
+    transition: all 0.3s ease; /* Asegura animación suave */
+}
+
+/* Centrado del contenido */
+.fc-h-event {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

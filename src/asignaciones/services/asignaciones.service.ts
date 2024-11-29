@@ -8,18 +8,28 @@ import {
   deleteDoc,
   query,
   where,
-  writeBatch
+  writeBatch,
 } from "firebase/firestore";
-import { IAsignacion, IasigacionesXusuario, IComentarioAsignacion } from "../../shared/models/IAsignaciones";
+import {
+  IAsignacion,
+  IasigacionesXusuario,
+  IComentarioAsignacion,
+} from "../../shared/models/IAsignaciones";
 import { getUsersInfo } from "../../adminUsuarios/services/user.services";
 
 // Colecciones de Firestore
 const asignacionesCollection = collection(db, "asignaciones");
 const asignacionesXUsuarioCollection = collection(db, "asignacionesXusuario");
-const comentariosAsignacionesCollection = collection(db, "comentariosAsignaciones");
+const comentariosAsignacionesCollection = collection(
+  db,
+  "comentariosAsignaciones"
+);
 
 // Crear una asignación y asignarla a múltiples usuarios
-async function crearAsignacion(asignacion: IAsignacion, usuarios: string[]): Promise<void> {
+async function crearAsignacion(
+  asignacion: IAsignacion,
+  usuarios: string[]
+): Promise<void> {
   try {
     const asignacionRef = doc(asignacionesCollection);
     await setDoc(asignacionRef, { ...asignacion, id: asignacionRef.id });
@@ -30,7 +40,10 @@ async function crearAsignacion(asignacion: IAsignacion, usuarios: string[]): Pro
   }
 }
 
-async function crearAsignacionXusuario(id:string, usuarios:string[]):Promise<void>{
+async function crearAsignacionXusuario(
+  id: string,
+  usuarios: string[]
+): Promise<void> {
   try {
     for (const uid of usuarios) {
       const asignacionUsuarioRef = doc(asignacionesXUsuarioCollection);
@@ -46,7 +59,6 @@ async function crearAsignacionXusuario(id:string, usuarios:string[]):Promise<voi
     console.error("Error al crear la asignaciones por usuario:", error);
     throw error;
   }
-
 }
 // Leer todas las asignaciones
 async function obtenerAsignaciones(): Promise<IAsignacion[]> {
@@ -64,7 +76,9 @@ async function obtenerAsignaciones(): Promise<IAsignacion[]> {
 }
 
 // Leer asignaciones de un usuario específico
-async function obtenerAsignacionesPorUsuario(uid: string): Promise<IAsignacion[]> {
+async function obtenerAsignacionesPorUsuario(
+  uid: string
+): Promise<IAsignacion[]> {
   try {
     // Paso 1: Obtener los documentos de asignacionesXUsuario para el usuario
     const usuariosSnapshot = await getDocs(
@@ -109,12 +123,14 @@ async function obtenerAsignacionesPorUsuario(uid: string): Promise<IAsignacion[]
   }
 }
 
-
 // Obtener asignaciones creadas por un jefe con información de usuarios asignados
-async function getAsignacionesCreadasPorJefeConUsuarios(jefeUid: string): Promise<
+async function getAsignacionesCreadasPorJefeConUsuarios(
+  jefeUid: string
+): Promise<
   {
     asignacion: IAsignacion;
     usuarios: {
+      idAsignacionesXUsuario: string; // Agregado para incluir el ID del documento
       uid: string;
       nombre: string;
       correoElectronico: string;
@@ -131,12 +147,16 @@ async function getAsignacionesCreadasPorJefeConUsuarios(jefeUid: string): Promis
       return map;
     }, {} as Record<string, any>);
 
-    const asignacionesQ = query(asignacionesCollection, where("creadoPor", "==", jefeUid));
+    const asignacionesQ = query(
+      asignacionesCollection,
+      where("creadoPor", "==", jefeUid)
+    );
     const asignacionesSnapshot = await getDocs(asignacionesQ);
 
     const resultado: {
       asignacion: IAsignacion;
       usuarios: {
+        idAsignacionesXUsuario: string; // Agregado para incluir el ID del documento
         uid: string;
         nombre: string;
         correoElectronico: string;
@@ -164,9 +184,11 @@ async function getAsignacionesCreadasPorJefeConUsuarios(jefeUid: string): Promis
         const usuarioInfo = usuariosMap[usuarioAsignado.uid];
 
         return {
+          idAsignacionesXUsuario: doc.id, // Aquí se incluye el ID del documento
           uid: usuarioAsignado.uid,
           nombre: usuarioInfo?.nombre || "Usuario no encontrado",
-          correoElectronico: usuarioInfo?.correoElectronico || "Correo no encontrado",
+          correoElectronico:
+            usuarioInfo?.correoElectronico || "Correo no encontrado",
           areaTrabajo: usuarioInfo?.areaTrabajo || "Área no encontrada",
           puestoTrabajo: usuarioInfo?.puestoTrabajo || "Puesto no encontrado",
           estado: usuarioAsignado.estado,
@@ -187,7 +209,10 @@ async function getAsignacionesCreadasPorJefeConUsuarios(jefeUid: string): Promis
 }
 
 // Actualizar una asignación
-async function actualizarAsignacion(id: string, data: Partial<IAsignacion>): Promise<void> {
+async function actualizarAsignacion(
+  id: string,
+  data: Partial<IAsignacion>
+): Promise<void> {
   try {
     const asignacionRef = doc(asignacionesCollection, id);
     await updateDoc(asignacionRef, data);
@@ -211,7 +236,9 @@ async function eliminarAsignacion(id: string): Promise<void> {
       asignacionesXUsuarioCollection,
       where("id_asignacion", "==", id)
     );
-    const asignacionesXUsuarioSnapshot = await getDocs(asignacionesXUsuarioQuery);
+    const asignacionesXUsuarioSnapshot = await getDocs(
+      asignacionesXUsuarioQuery
+    );
     asignacionesXUsuarioSnapshot.forEach((doc) => {
       batch.delete(doc.ref);
     });
@@ -231,14 +258,18 @@ async function eliminarAsignacion(id: string): Promise<void> {
 
     console.log("Asignación y datos relacionados eliminados correctamente.");
   } catch (error) {
-    console.error("Error al eliminar la asignación y sus datos relacionados:", error);
+    console.error(
+      "Error al eliminar la asignación y sus datos relacionados:",
+      error
+    );
     throw error;
   }
 }
 
-
 // Crear un comentario
-async function crearComentario(comentario: IComentarioAsignacion): Promise<void> {
+async function crearComentario(
+  comentario: IComentarioAsignacion
+): Promise<void> {
   try {
     const comentarioRef = doc(comentariosAsignacionesCollection);
     await setDoc(comentarioRef, { ...comentario, id: comentarioRef.id });
@@ -249,7 +280,9 @@ async function crearComentario(comentario: IComentarioAsignacion): Promise<void>
 }
 
 // Obtener comentarios por asignación
-async function obtenerComentarios(id_asignacion: string): Promise<IComentarioAsignacion[]> {
+async function obtenerComentarios(
+  id_asignacion: string
+): Promise<IComentarioAsignacion[]> {
   try {
     const snapshot = await getDocs(comentariosAsignacionesCollection);
     return snapshot.docs
@@ -262,7 +295,10 @@ async function obtenerComentarios(id_asignacion: string): Promise<IComentarioAsi
 }
 
 // Actualizar un comentario
-async function actualizarComentario(id: string, data: Partial<IComentarioAsignacion>): Promise<void> {
+async function actualizarComentario(
+  id: string,
+  data: Partial<IComentarioAsignacion>
+): Promise<void> {
   try {
     const comentarioRef = doc(comentariosAsignacionesCollection, id);
     await updateDoc(comentarioRef, data);
@@ -283,28 +319,45 @@ async function eliminarComentario(id: string): Promise<void> {
   }
 }
 
-async function obtenerUsuariosPorAsignacion(idAsignacion: string): Promise<string[]> {
+async function obtenerUsuariosPorAsignacion(
+  idAsignacion: string
+): Promise<{ uid: string; idAsignacionXUsuario: string }[]> {
   try {
     // Consulta para obtener los usuarios asignados a la asignación específica
     const usuariosSnapshot = await getDocs(
-      query(asignacionesXUsuarioCollection, where("id_asignacion", "==", idAsignacion))
+      query(
+        asignacionesXUsuarioCollection,
+        where("id_asignacion", "==", idAsignacion)
+      )
     );
 
-    // Mapea los resultados y devuelve solo los `uid` de los usuarios asignados
-    const usuariosAsignados = usuariosSnapshot.docs.map((doc) => doc.data().uid);
+    // Mapea los resultados para incluir `uid` y el ID del documento (asignacionXUsuario)
+    const usuariosAsignados = usuariosSnapshot.docs.map((doc) => ({
+      uid: doc.data().uid,
+      idAsignacionXUsuario: doc.id, // El ID del documento en Firestore
+    }));
     return usuariosAsignados;
+
   } catch (error) {
     console.error("Error al obtener usuarios por asignación:", error);
     throw error;
   }
 }
 
-async function eliminarAsignacionesPorUsuarios(uids: string[], idAsignacion: string): Promise<void> {
+
+async function eliminarAsignacionesPorUsuarios(
+  uids: string[],
+  idAsignacion: string
+): Promise<void> {
   try {
     for (const uid of uids) {
       // Consulta para obtener el documento específico en la colección asignacionesXUsuario
       const usuariosSnapshot = await getDocs(
-        query(asignacionesXUsuarioCollection, where("uid", "==", uid), where("id_asignacion", "==", idAsignacion))
+        query(
+          asignacionesXUsuarioCollection,
+          where("uid", "==", uid),
+          where("id_asignacion", "==", idAsignacion)
+        )
       );
 
       for (const docSnapshot of usuariosSnapshot.docs) {
@@ -312,14 +365,14 @@ async function eliminarAsignacionesPorUsuarios(uids: string[], idAsignacion: str
         await deleteDoc(doc(asignacionesXUsuarioCollection, docSnapshot.id));
       }
     }
-    console.log(`Usuarios eliminados de la asignación ${idAsignacion}: ${uids.join(", ")}`);
+    console.log(
+      `Usuarios eliminados de la asignación ${idAsignacion}: ${uids.join(", ")}`
+    );
   } catch (error) {
     console.error("Error al eliminar asignaciones de usuarios:", error);
     throw error;
   }
 }
-
-
 
 export {
   crearAsignacion,
@@ -334,5 +387,5 @@ export {
   eliminarComentario,
   obtenerUsuariosPorAsignacion,
   eliminarAsignacionesPorUsuarios,
-  crearAsignacionXusuario
+  crearAsignacionXusuario,
 };

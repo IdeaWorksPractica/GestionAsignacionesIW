@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import './Calendar.css';
 import FullCalendar from '@fullcalendar/react'; // Importa FullCalendar
 import dayGridPlugin from '@fullcalendar/daygrid'; // Vista de cuadrícula
 import timeGridPlugin from '@fullcalendar/timegrid'; // Vista de tiempo
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction'; // Para interactividad
+import { Spin } from 'antd';
 import { EventClickArg } from '@fullcalendar/core';
+import { useNavigate } from 'react-router-dom';
 import { getInfoUser } from '../../auth/services/auth.services';
 import { IUser } from '../../shared/models/IUsuario';
 import { IAsignacion } from '../../shared/models/IAsignaciones';
@@ -12,7 +15,8 @@ import {
   getAsignacionesCreadasPorJefeConUsuarios,
 } from '../../asignaciones/services/asignaciones.service';
 import moment from 'moment';
-// Define los tipos de los eventos
+import { ModalRegisterAsignacion } from '../../asignaciones/ui/ModalAsignaciones';
+
 interface CalendarEvent {
   id: string;
   title: string;
@@ -21,33 +25,32 @@ interface CalendarEvent {
 }
 
 const Calendar: React.FC = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [asignaciones, setAsignaciones] = useState<IAsignacion[]>([]);
   const [userLogged, setUserLogged] = useState<IUser | null>(null);
   const [userRol, setRol] = useState<string>('');
   const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const coloresGenerados = new Set();
-  const coloresDisponibles = ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#8E44AD']; // Lista de colores disponibles
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAsignacion, setSelectedAsignacion] = useState<IAsignacion | null>(null);
+
+  const coloresDisponibles = ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#8E44AD'];
+
   const getInfo = async () => {
-    setLoading(true);
     const user = await getInfoUser();
     setUserLogged(user);
     setRol(user?.puestoTrabajoDetalle?.rol ?? '');
-  
-    // Obtener asignaciones según el rol
+
     if (user?.puestoTrabajoDetalle?.rol === 'Jefe') {
       const jefeAsignaciones = await getAsignacionesCreadasPorJefeConUsuarios(user.uid);
       setAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
-      console.log(jefeAsignaciones);
       eventos(jefeAsignaciones);
     } else {
-      console.log('Se obtendran los datos de los demas usuarios')
       const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
-      eventos(usuarioAsignaciones);
       setAsignaciones(usuarioAsignaciones);
+      eventos(usuarioAsignaciones);
+      setLoading(false);
     }
-  
     setLoading(false);
   };
 
@@ -55,26 +58,29 @@ const Calendar: React.FC = () => {
     getInfo();
   }, []);
 
-  const eventos = (events:any) => {
+  const eventos = (events: any) => {
     setEvents(
-      events.map(event => ({
-        id: event.asignacion.id, // Asegúrate de que 'id' está definido en IAsignacion
-        title: event.asignacion.nombre, // Cambia 'titulo' según tu interfaz
-        start: moment(event.asignacion.fechaInicio).format('YYYY-MM-DD'), // Asegúrate de que 'fechaInicio' es el formato correcto
-        end: moment(event.asignacion.fechaFin).format('YYYY-MM-DD'), // Asegúrate de que 'fechaInicio' es el formato correcto
+      events.map((event: any) => ({
+        id: event.asignacion ? event.asignacion.id : event.id, // Verifica si el objeto tiene el formato de "Jefe" o "Empleado"
+        title: event.asignacion ? event.asignacion.nombre : event.nombre, // Selecciona el título según el formato
+        start: moment(
+          event.asignacion ? event.asignacion.fechaInicio : event.fechaInicio
+        ).format('YYYY-MM-DD'), // Formatea la fecha de inicio según el formato
+        end: moment(
+          event.asignacion ? event.asignacion.fechaFin : event.fechaFin
+        ).format('YYYY-MM-DD'), // Formatea la fecha de fin según el formato
         backgroundColor: generarColorAleatorio(),
         borderColor: '#FFFFFF',
-      })));
-  }
+      }))
+    );
+  };
+  
 
-const generarColorAleatorio = () => {
-  const indiceAleatorio = Math.floor(Math.random() * coloresDisponibles.length);
-  console.log('Indice juco?..',indiceAleatorio);
-  return coloresDisponibles[indiceAleatorio]; // Selecciona un color aleatorio de la lista
-};
+  const generarColorAleatorio = () => {
+    const indiceAleatorio = Math.floor(Math.random() * coloresDisponibles.length);
+    return coloresDisponibles[indiceAleatorio];
+  };
 
-
-  // Manejar clics en fechas
   const handleDateClick = (arg: DateClickArg) => {
     const title = prompt('Introduce un título para el evento:');
     if (title) {
@@ -85,31 +91,68 @@ const generarColorAleatorio = () => {
     }
   };
 
-  // Manejar clics en eventos
   const handleEventClick = (arg: EventClickArg) => {
-    // llamar modal para actualizar / borrar evento
-    if (window.confirm(`¿Deseas eliminar el evento "${arg.event.title}"?`)) {
-      setEvents(events.filter((event) => event.id !== arg.event.id));
+    const asignacionId = arg.event.id;
+    const asignacionSeleccionada = asignaciones.find(asignacion => asignacion.id === asignacionId);
+
+    if (userRol === 'Jefe' && asignacionSeleccionada) {
+      setSelectedAsignacion(asignacionSeleccionada);
+      setIsModalOpen(true);
+    } else if (userRol === 'Empleado') {
+      navigate(`/home/asignacion/${asignacionId}`);
     }
   };
 
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedAsignacion(null);
+  };
+
   return (
-    <div className='p-5'>
+    <div className="p-5">
       <h1 className="text-xl font-bold mb-4">Calendario de actividades</h1>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        editable={true}
-        selectable={true}
-        events={events} // Eventos dinámicos
-        dateClick={handleDateClick} // Click en fecha
-        eventClick={handleEventClick} // Click en evento
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-      />
+      {loading ? (
+        <Spin
+          tip="Cargando..."
+          size="large"
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        />
+      ) : (
+        <>
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            editable={true}
+            selectable={true}
+            events={events}
+            dateClick={handleDateClick}
+            eventClick={handleEventClick}
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            }}
+          />
+          {isModalOpen && (
+            <ModalRegisterAsignacion
+              loggedUser={userLogged}
+              isOpen={isModalOpen}
+              onClose={handleModalClose}
+              selectedAsignacion={selectedAsignacion}
+              refreshData={() => {
+                handleModalClose();
+                getInfo();
+              }}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

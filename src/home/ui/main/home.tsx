@@ -18,7 +18,6 @@ export const Home = () => {
       const user = await getInfoUser();
       if (user) {
         setUserData(user);
-        console.log("Rol del usuario:", user.puestoTrabajoDetalle?.rol);
         setRol(user.puestoTrabajoDetalle?.rol ?? "");
       }
       setLoading(false);
