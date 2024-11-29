@@ -5,6 +5,7 @@ export interface IAsignacion {
   fechaInicio: Date;
   fechaFin: Date;
   creadoPor: string;
+  idAsignacionesXUsuario:string | null
 }
 
 export interface IasigacionesXusuario{

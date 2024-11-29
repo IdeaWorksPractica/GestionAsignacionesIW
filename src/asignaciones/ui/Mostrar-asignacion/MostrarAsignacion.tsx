@@ -6,8 +6,14 @@ import { obtenerAsignacionSeleccionada } from "../../services/asignacion.selecci
 export const MostrarAsignacion = () => {
   const { id } = useParams();
   const [asignacion,setAsignacion] = useState<IAsignacionSeleccionada>()
+
+  const getData = async () =>{
+    console.log('Este es el id obtenido de la url: ', id)
+    const asignacionDetalle = await obtenerAsignacionSeleccionada(id)
+    console.log('Detalle de la asignacion: ', asignacionDetalle)
+  }
   useEffect(()=>{
-    obtenerAsignacionSeleccionada('DpWc4V8MjS0RT1goDVPU')
+    getData();
   },[])
   return (
     <section className="container-asignacion-seleccionada">

@@ -71,21 +71,32 @@ async function obtenerAsignacionesPorUsuario(uid: string): Promise<IAsignacion[]
       query(asignacionesXUsuarioCollection, where("uid", "==", uid))
     );
 
-    // Paso 2: Obtener los IDs de las asignaciones
-    const asignacionesIds = usuariosSnapshot.docs.map((doc) => doc.data().id_asignacion);
+    // Paso 2: Obtener los IDs de las asignaciones y los IDs de `asignacionesXUsuario`
+    const asignacionesData = usuariosSnapshot.docs.map((doc) => ({
+      idAsignacion: doc.data().id_asignacion,
+      idAsignacionesXUsuario: doc.id, // Guardamos el ID del documento
+    }));
 
-    if (asignacionesIds.length === 0) return []; // Si no hay asignaciones, retornamos un array vacío
+    if (asignacionesData.length === 0) return []; // Si no hay asignaciones, retornamos un array vacío
 
-    // Paso 3: Realizar una única consulta a la colección de asignaciones usando `where("id", "in", [...])`
+    // Paso 3: Obtener los IDs únicos de las asignaciones
+    const asignacionesIds = asignacionesData.map((data) => data.idAsignacion);
+
+    // Paso 4: Realizar una única consulta a la colección de asignaciones usando `where("id", "in", [...])`
     const asignacionesSnapshot = await getDocs(
       query(asignacionesCollection, where("id", "in", asignacionesIds))
     );
 
-    // Paso 4: Transformar los datos obtenidos
+    // Paso 5: Transformar los datos obtenidos e incluir el ID de asignacionesXUsuario
     const asignaciones = asignacionesSnapshot.docs.map((doc) => {
       const data = doc.data();
+      const idAsignacionesXUsuario = asignacionesData.find(
+        (item) => item.idAsignacion === doc.id
+      )?.idAsignacionesXUsuario;
+
       return {
         ...data,
+        idAsignacionesXUsuario, // Incluimos el ID de asignacionesXUsuario
         fechaInicio: data.fechaInicio?.toDate(),
         fechaFin: data.fechaFin?.toDate(),
       };

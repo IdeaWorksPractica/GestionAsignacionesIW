@@ -25,7 +25,12 @@ const App: React.FC = () => {
         let allowedPaths: string[] = [];
         const dataUser = await getInfoUser();
         if (dataUser?.puestoTrabajoDetalle?.rol === "Empleado") {
-          allowedPaths = ["/home/asignaciones"];
+          allowedPaths = [
+            "/home/asignaciones",
+            "/home/asignacion/:id",
+            "/home/calendar"
+
+          ];
         } else {
           allowedPaths = [
             "/home/asignaciones",
@@ -35,7 +40,7 @@ const App: React.FC = () => {
           ];
         }
         if (!allowedPaths.includes(location.pathname)) {
-          navigate("/home");
+          navigate("/home/asignaciones");
         }
       } else {
         navigate("/");
@@ -51,7 +56,7 @@ const App: React.FC = () => {
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />}>
         <Route path="asignaciones" element={<Asignaciones />} />
-        <Route path="asignacion/:id" element={<Asignaciones />} />
+        <Route path="asignacion/:id" element={<MostrarAsignacion />} />
         <Route path="admin-usuarios" element={<AdminUsuarios />} />
         <Route path="admin-areas" element={<Areas />} />
         <Route path="calendar" element={<Calendar />} />

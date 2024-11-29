@@ -75,16 +75,6 @@ export const Home = () => {
                   <div className="opt-container">
                     <button
                       className={`option ${
-                        location.pathname === "/home/calendar"
-                          ? "active"
-                          : ""
-                      }`}
-                      onClick={() => handleNavigation("/home/calendar")}
-                    >
-                      Calendario
-                    </button>
-                    <button
-                      className={`option ${
                         location.pathname === "/home/admin-areas"
                           ? "active"
                           : ""
@@ -105,6 +95,16 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
+                        location.pathname === "/home/calendar"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/calendar")}
+                    >
+                      Calendario
+                    </button>
+                    <button
+                      className={`option ${
                         location.pathname === "/home/admin-usuarios"
                           ? "active"
                           : ""
@@ -117,6 +117,16 @@ export const Home = () => {
                 )}
                  {userRol === "Empleado" && (
                   <div className="opt-container">
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/calendar"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/calendar")}
+                    >
+                      Calendario
+                    </button>
                     <button
                       className={`option ${
                         location.pathname === "/home/asignaciones"
@@ -212,6 +222,17 @@ export const Home = () => {
                     </button>
                     <button
                       className={`option ${
+                        location.pathname === "/home/calendar"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
+                    </button>
+
+                    <button
+                      className={`option ${
                         location.pathname === "/home/asignaciones"
                           ? "active"
                           : ""
@@ -234,6 +255,16 @@ export const Home = () => {
                 )}
                 {userRol === "Empleado" && (
                   <div className="opt-container">
+                    <button
+                      className={`option ${
+                        location.pathname === "/home/calendar"
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleNavigation("/home/asignaciones")}
+                    >
+                      Asignaciones
+                    </button>
                     <button
                       className={`option ${
                         location.pathname === "/home/asignaciones"

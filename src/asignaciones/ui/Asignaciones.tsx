@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './asignaciones.css';
 import '../../shared/styles/admin-usuarios.css';
 import { getScreenWidthMinusOffset } from '../../shared/services/title.service';
@@ -15,6 +16,7 @@ import moment from 'moment';
 import { IUser } from '../../shared/models/IUsuario';
 
 export const Asignaciones = () => {
+  const navigate = useNavigate();
   const [userLogged, setUserLogged] = useState<IUser | null>(null);
   const [titleWidth, setWidth] = useState<number>();
   const [loading, setLoading] = useState(true);
@@ -166,7 +168,13 @@ export const Asignaciones = () => {
                   <div
                     key={asignacion.id}
                     className="col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12 cards-heigth"
-                    onClick={() => handleCardClick(asignacion)}
+                    onClick={() => {
+                      if (userRol === "Empleado") {
+                        navigate(`/home/asignacion/${asignacion.idAsignacionesXUsuario}`);
+                      } else {
+                        handleCardClick(asignacion)
+                      }
+                    }}
                   >
                     <div className="card-user ">
                       <div className="title-cards">
