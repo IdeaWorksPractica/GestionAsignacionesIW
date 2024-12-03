@@ -59,28 +59,22 @@ async function obtenerAsignacionSeleccionada(
 
     const asignacion = asignacionSnapshot.docs[0].data() as IAsignacion;
     const fechaInicio =
-      asignacion.fechaInicio instanceof Timestamp
-        ? new Date(asignacion.fechaInicio.seconds * 1000).toLocaleDateString(
-            "es-ES",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }
-          )
-        : "No definida";
+  asignacion.fechaInicio instanceof Timestamp
+    ? new Date(asignacion.fechaInicio.seconds * 1000).toLocaleDateString("es-ES", {
+        year: "2-digit", // Año con dos dígitos
+        month: "2-digit", // Mes con dos dígitos
+        day: "2-digit", // Día con dos dígitos
+      })
+    : "No definida";
 
-    const fechaFin =
-      asignacion.fechaFin instanceof Timestamp
-        ? new Date(asignacion.fechaFin.seconds * 1000).toLocaleDateString(
-            "es-ES",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }
-          )
-        : "No definida";
+const fechaFin =
+  asignacion.fechaFin instanceof Timestamp
+    ? new Date(asignacion.fechaFin.seconds * 1000).toLocaleDateString("es-ES", {
+        year: "2-digit", // Año con dos dígitos
+        month: "2-digit", // Mes con dos dígitos
+        day: "2-digit", // Día con dos dígitos
+      })
+    : "No definida";
     const usuarioCreador = await getUserById(asignacion.creadoPor);
     const creadoPor = {
       nombre_usuario: usuarioCreador?.nombre,

@@ -177,7 +177,7 @@ export const Asignaciones = () => {
                       <div className="title-cards">
                         <span>{asignacion.nombre}</span>
                       </div>
-                      <div className="info-card-container">
+                      <div className="info-card-container pt-md-0">
                         <div className="mb-2">
                           <span className="fw-bold">Descripción:</span>
                           <br />
