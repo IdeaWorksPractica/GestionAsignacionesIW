@@ -44,10 +44,7 @@ export const Asignaciones = () => {
       setFilteredAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
       console.log(jefeAsignaciones);
     } else {
-      console.log('Se obtendran los datos de los demas usuarios')
       const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
-      console.log(user)
-      console.log(usuarioAsignaciones);
       setAsignaciones(usuarioAsignaciones);
       setFilteredAsignaciones(usuarioAsignaciones);
     }

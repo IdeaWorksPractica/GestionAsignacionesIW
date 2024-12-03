@@ -7,12 +7,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { getUserById } from "../../adminUsuarios/services/user.services";
 import {
   IAsignacionSeleccionada,
   IasigacionesXusuario,
   IAsignacion,
   IComentarioAsignacion,
 } from "../../shared/models/IAsignaciones";
+import { IUser } from "../../shared/models/IUsuario";
 
 import { getInfoUser } from "../../auth/services/auth.services";
 const asignacionesCollection = collection(db, "asignaciones");
@@ -25,7 +27,7 @@ async function obtenerAsignacionSeleccionada(
 ): Promise<IAsignacionSeleccionada> {
   try {
     const usuario = await getInfoUser()
-    console.log(usuario)
+    //console.log(usuario)
     // Obtener la asignación por usuario
     const asignacionUsuarioSnapshot = await getDocs(
       query(asignacionesXUsuarioCollection, where("id", "==", id_asignacion_usuario))
@@ -46,17 +48,17 @@ async function obtenerAsignacionSeleccionada(
 
     const asignacion = asignacionSnapshot.docs[0].data() as IAsignacion;
 
-    // Obtener información adicional (como usuario creador y asignado)
+    const usuarioCreador = await getUserById(asignacion.creadoPor)
     const creadoPor = {
-      nombre_usuario: "Creador Desconocido", // Reemplazar con lógica real para obtener información del creador
+      nombre_usuario: usuarioCreador?.nombre,
       uid: asignacion.creadoPor,
-      correo_electronico: "correo@creador.com", // Reemplazar con lógica real
+      correo_electronico: usuarioCreador?.correoElectronico, 
     };
 
     const usuarioAsignado = {
-      nombre_usuario: "Usuario Asignado", // Reemplazar con lógica real
+      nombre_usuario: usuario?.nombre,
       uid: asignacionUsuario.uid,
-      correo_electronico: "correo@usuario.com", // Reemplazar con lógica real
+      correo_electronico: usuario?.correoElectronico, 
     };
 
     // Construir el modelo `IAsignacionSeleccionada`

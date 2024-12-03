@@ -47,6 +47,7 @@ const Calendar: React.FC = () => {
       eventos(jefeAsignaciones);
     } else {
       const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
+      console.log('Asignaciones del usuario: ', usuarioAsignaciones)
       setAsignaciones(usuarioAsignaciones);
       eventos(usuarioAsignaciones);
       setLoading(false);
@@ -92,14 +93,12 @@ const Calendar: React.FC = () => {
   };
 
   const handleEventClick = (arg: EventClickArg) => {
-    const asignacionId = arg.event.id;
-    const asignacionSeleccionada = asignaciones.find(asignacion => asignacion.id === asignacionId);
-
+    const asignacionSeleccionada = asignaciones.find(asignacion => asignacion.id === arg.event.id);
     if (userRol === 'Jefe' && asignacionSeleccionada) {
       setSelectedAsignacion(asignacionSeleccionada);
       setIsModalOpen(true);
     } else if (userRol === 'Empleado') {
-      navigate(`/home/asignacion/${asignacionId}`);
+      navigate(`/home/asignacion/${asignacionSeleccionada?.idAsignacionesXUsuario}`);
     }
   };
 

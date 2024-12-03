@@ -8,8 +8,8 @@ export const MostrarAsignacion = () => {
   const [asignacion,setAsignacion] = useState<IAsignacionSeleccionada>()
 
   const getData = async () =>{
-    console.log('Este es el id obtenido de la url: ', id)
     const asignacionDetalle = await obtenerAsignacionSeleccionada(id)
+    setAsignacion(asignacionDetalle)
     console.log('Detalle de la asignacion: ', asignacionDetalle)
   }
   useEffect(()=>{
@@ -17,7 +17,7 @@ export const MostrarAsignacion = () => {
   },[])
   return (
     <section className="container-asignacion-seleccionada">
-        <h3></h3>
+        <h3>{asignacion?.nombre_asignacion}</h3>
     </section>
   )
 }
