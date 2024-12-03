@@ -24,12 +24,12 @@ const App: React.FC = () => {
       if (user) {
         let allowedPaths: string[] = [];
         const dataUser = await getInfoUser();
+  
         if (dataUser?.puestoTrabajoDetalle?.rol === "Empleado") {
           allowedPaths = [
             "/home/asignaciones",
-            "/home/asignacion/:id",
-            "/home/calendar"
-
+            "/home/asignacion", // Base path for dynamic routes
+            "/home/calendar",
           ];
         } else {
           allowedPaths = [
@@ -39,16 +39,21 @@ const App: React.FC = () => {
             "/home/calendar",
           ];
         }
-        if (!allowedPaths.includes(location.pathname)) {
+  
+        const isAllowed =
+          allowedPaths.some((path) => location.pathname.startsWith(path)) ||
+          allowedPaths.includes(location.pathname);
+  
+        if (!isAllowed) {
           navigate("/home/asignaciones");
         }
       } else {
         navigate("/");
       }
     };
-
+  
     verifySession();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

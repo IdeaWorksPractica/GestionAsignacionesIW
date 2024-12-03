@@ -1,3 +1,39 @@
 .container-asignacion-seleccionada{
+    height: 100vh;
+    padding: 3rem;
+    position: relative;
+    font-size: 1.4rem!important;
+}
+.section-comentarios {
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+    position: absolute; /* Cambiar de fixed a absolute */
+    bottom: 0; /* Ajustar al fondo del contenedor */
+    background-color: red;
+    height: 50%;
+    display: flex;
+    align-items: flex-end;
+    left: 0; /* Asegura que se alinee con el lado izquierdo */
+    box-sizing: border-box;
+    margin-left: 3rem;
+    margin-right: 3rem; /* Asegura que padding y border no afecten el ancho total */
+}
+
+.input-conment{
+    display: flex;
+    justify-content: space-between;
+    background-color: #D9D9D9;
+    width: 70%;
+    height: 4rem;
+    border-radius: 15px;
     padding: 1rem;
+    margin-right: 1rem;
+}
+.input-conment>input{
+    border: none;
+    width: 95%;
+    background-color: transparent;
+}
+.input-conment>input:focus{
+    border: none!important;
+    outline: none!important;
 }

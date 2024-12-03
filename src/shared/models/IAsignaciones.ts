@@ -27,8 +27,8 @@ export interface IAsignacionSeleccionada{
   id_asignacion:string;
   nombre_asignacion : string;
   descripcion_asignacion : string;
-  fechaInicio: Date;
-  fechaFin: Date;
+  fechaInicio: Date | string;
+  fechaFin: Date | string;
   id_asignacion_usuario: string;
   estado: string;
   creadoPor: {
