@@ -80,6 +80,7 @@ const fechaFin =
       nombre_usuario: usuarioCreador?.nombre,
       uid: asignacion.creadoPor,
       correo_electronico: usuarioCreador?.correoElectronico,
+      cargo: usuarioCreador?.puestoTrabajo
     };
 
     const usuarioAsignado = {

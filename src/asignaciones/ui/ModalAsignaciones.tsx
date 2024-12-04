@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal, notification, Spin, Popconfirm } from "antd";
 import trash from "../../../public/icons/trash.svg";
+import eye from "../../../public/icons/eye.svg";
 import { IAsignacion } from "../../shared/models/IAsignaciones";
 import { getUsersInfo } from "../../adminUsuarios/services/user.services";
 import {
@@ -40,6 +42,7 @@ export const ModalRegisterAsignacion: React.FC<
   );
   const [loading, setLoading] = useState(false);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -85,27 +88,27 @@ export const ModalRegisterAsignacion: React.FC<
   const fetchUsuariosDisponibles = async () => {
     try {
       const allUsuarios = await getUsersInfo();
-  
+
       const usuarioLogueado = allUsuarios.find(
         (user) => user.uid === loggedUser?.uid
       );
-  
+
       if (!usuarioLogueado) {
         throw new Error("Usuario logueado no encontrado.");
       }
-  
+
       const usuariosFiltrados = allUsuarios.filter(
         (user) =>
           user.areaTrabajo === usuarioLogueado.areaTrabajo &&
           user.uid !== usuarioLogueado.uid // Excluir al usuario logueado
       );
-  
+
       const usuariosFinales = selectedAsignacion
         ? usuariosFiltrados.filter(
             (user) => !usuariosSeleccionados.some((u) => u.uid === user.uid)
           )
         : usuariosFiltrados;
-  
+
       setUsuariosDisponibles(
         usuariosFinales.map((user) => ({
           uid: user.uid,
@@ -121,26 +124,27 @@ export const ModalRegisterAsignacion: React.FC<
       });
     }
   };
-  
 
   const cargarUsuariosAsignados = async () => {
     if (!selectedAsignacion) return;
-  
+
     try {
       // Obtener usuarios asignados a la asignación específica
       const usuariosAsignadosData = await obtenerUsuariosPorAsignacion(
         selectedAsignacion.id
       );
-  
+
       console.log(usuariosAsignadosData); // [{ uid, idAsignacionXUsuario }]
-  
+
       // Obtener información de todos los usuarios
       const allUsuarios = await getUsersInfo();
-  
+
       // Mapear usuarios asignados con la información completa y añadir idAsignacionXUsuario
       const usuariosAsignados = usuariosAsignadosData
         .map((asignacion) => {
-          const usuarioInfo = allUsuarios.find((user) => user.uid === asignacion.uid);
+          const usuarioInfo = allUsuarios.find(
+            (user) => user.uid === asignacion.uid
+          );
           if (usuarioInfo) {
             return {
               uid: asignacion.uid, // ID del usuario
@@ -155,8 +159,9 @@ export const ModalRegisterAsignacion: React.FC<
         nombre: string;
         idAsignacionXUsuario: string;
       }[];
-  
+
       // Actualizar estado con usuarios seleccionados
+      console.log("La data de los usuarios asignados: ", usuariosAsignados);
       setUsuariosSeleccionados(usuariosAsignados);
     } catch (error) {
       console.error("Error al cargar usuarios asignados:", error);
@@ -166,7 +171,6 @@ export const ModalRegisterAsignacion: React.FC<
       });
     }
   };
-  
 
   const handleAddUsuario = (uid: string) => {
     const usuario = usuariosDisponibles.find((u) => u.uid === uid);
@@ -233,7 +237,10 @@ export const ModalRegisterAsignacion: React.FC<
         }
 
         if (newSeleccionados.length > 0) {
-          await crearAsignacionXusuario(selectedAsignacion.id, newSeleccionados);
+          await crearAsignacionXusuario(
+            selectedAsignacion.id,
+            newSeleccionados
+          );
         }
 
         notification.success({
@@ -296,7 +303,6 @@ export const ModalRegisterAsignacion: React.FC<
     }
   };
 
-
   return (
     <Modal maskClosable={false} open={isOpen} onCancel={onClose} footer={null}>
       <h4 className="text-center fw-bold mb-3">
@@ -345,25 +351,27 @@ export const ModalRegisterAsignacion: React.FC<
 
           <div className="div-register-form">
             <label>Usuarios Disponibles</label>
-            <select onChange={(e) => handleAddUsuario(e.target.value)} defaultValue="">
-  <option value="" disabled>
-    Seleccionar usuario
-  </option>
-  {usuariosDisponibles.length > 0 ? (
-    usuariosDisponibles.map((user) => {
-      return (
-        <option key={user.uid} value={user.uid}>
-          {user.nombre} - {user.areaTrabajo}
-        </option>
-      );
-    })
-  ) : (
-    <option value="" disabled>
-      No hay usuarios disponibles
-    </option>
-  )}
-</select>
-
+            <select
+              onChange={(e) => handleAddUsuario(e.target.value)}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Seleccionar usuario
+              </option>
+              {usuariosDisponibles.length > 0 ? (
+                usuariosDisponibles.map((user) => {
+                  return (
+                    <option key={user.uid} value={user.uid}>
+                      {user.nombre} - {user.areaTrabajo}
+                    </option>
+                  );
+                })
+              ) : (
+                <option value="" disabled>
+                  No hay usuarios disponibles
+                </option>
+              )}
+            </select>
           </div>
 
           <div className="div-register-form mt-4">
@@ -373,6 +381,7 @@ export const ModalRegisterAsignacion: React.FC<
               <thead>
                 <tr>
                   <th>Nombre</th>
+                  <th></th>
                   <th></th>
                 </tr>
               </thead>
@@ -396,6 +405,17 @@ export const ModalRegisterAsignacion: React.FC<
                         </button>
                       </Popconfirm>
                     </td>
+                    {user.idAsignacionXUsuario && (
+                      <td>
+                        <button onClick={()=>{ navigate(`/home/asignacion/${user.idAsignacionXUsuario}`)}} className="btn p-0">
+                          <img
+                            className="img-fluid p-0"
+                            src={eye}
+                            alt="Ver asignación"
+                          />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

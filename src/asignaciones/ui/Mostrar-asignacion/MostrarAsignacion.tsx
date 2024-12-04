@@ -3,7 +3,7 @@ import "./mostrarAsignacion.css";
 import { useParams } from "react-router-dom";
 import { IAsignacionSeleccionada } from "../../../shared/models/IAsignaciones";
 import { obtenerAsignacionSeleccionada } from "../../services/asignacion.seleccionada.service";
-import { Spin, Divider, Select, Popconfirm } from "antd";
+import { Spin, Select, Popconfirm } from "antd";
 
 export const MostrarAsignacion = () => {
   const { id } = useParams();
@@ -50,53 +50,81 @@ export const MostrarAsignacion = () => {
 
   const handleConfirmChange = () => {
     if (pendingChange) {
-      setAsignacion((prev) => ({ ...prev, estado: pendingChange })); // Actualiza el estado
-      console.log("Nuevo estado de la asignación:", pendingChange); // Imprime en consola
-      setPendingChange(null); // Limpia el cambio pendiente
+      setAsignacion((prev) => ({ ...prev, estado: pendingChange }));
+      console.log("Nuevo estado de la asignación:", pendingChange); 
+      setPendingChange(null);
     }
   };
 
   const handleCancelChange = () => {
     console.log("Cambio cancelado");
-    setPendingChange(null); // Limpia el cambio pendiente
+    setPendingChange(null);
   };
 
   return (
     <section className="container-asignacion-seleccionada">
       <section className="title-content">
         <h4>Asignación: {asignacion?.nombre_asignacion}</h4>
-        <div>
-          <span>Estado: </span>
-          <Popconfirm
-            title="¿Estás seguro de que deseas cambiar el estado?"
-            onConfirm={handleConfirmChange}
-            onCancel={handleCancelChange}
-            okText="Sí"
-            cancelText="No"
-            visible={pendingChange !== null} // Mostrar solo si hay un cambio pendiente
-          >
-            <Select
-              value={asignacion?.estado} // Vincula el valor con asignacion.estado
-              style={{ width: 200 }}
-              onChange={(value) => setPendingChange(value)} // Manejar cambio pendiente
-            >
-              <Option value="sin-iniciar">Sin iniciar</Option>
-              <Option value="en-proceso">En Proceso</Option>
-              <Option value="finalizado">Finalizado</Option>
-            </Select>
-          </Popconfirm>
-        </div>
       </section>
       <section className="section-info">
-        <div className="mb-3">
-          <span>Fecha de Inicio: {asignacion?.fechaInicio}</span>
-          <span className="px-5">
-            Fecha de Finalización: {asignacion?.fechaFin}
-          </span>
+        <div className="firts-container">
+          <div className="w-50">
+            <span className="fecha-inicio">
+              Fecha de Inicio: {asignacion?.fechaInicio}
+            </span>
+            <br />
+            <span className="fecha-finalizacion">
+              Fecha de Finalización: {asignacion?.fechaFin}
+            </span>
+          </div>
+          <div className="w-50">
+            <span>Estado: </span>
+            <Popconfirm
+              title="¿Estás seguro de que deseas cambiar el estado?"
+              onConfirm={handleConfirmChange}
+              onCancel={handleCancelChange}
+              okText="Sí"
+              cancelText="No"
+              visible={pendingChange !== null} // Mostrar solo si hay un cambio pendiente
+            >
+              <select
+                className="select-list-estado"
+                value={asignacion?.estado} // Vincula el valor con asignacion.estado
+                onChange={(value) => setPendingChange(value)} // Manejar cambio pendiente
+              >
+                <option value="sin-iniciar">Sin iniciar</option>
+                <option value="en-proceso">En Proceso</option>
+                <option value="finalizado">Finalizado</option>
+              </select>
+            </Popconfirm>
+          </div>
         </div>
-        <Divider orientation="left" className="m-0 p-0">Descripción: </Divider>
-        <br />
-        <p>{asignacion?.descripcion_asignacion}</p>
+        <div className="second-container">
+          <div className="div-description">
+            <span className="mb-2">Descripcion del Proyecto:</span>
+            <br />
+            <p>{asignacion?.descripcion_asignacion}</p>
+          </div>
+          <div className="div-container-persona">
+          <span>Personas:</span>
+            <div className="container-persona">
+              <div className="circle-img">
+              </div>
+              <div className="d-flex flex-column">
+                  <span className="fw-bold">{asignacion?.creadoPor.nombre_usuario}</span>
+                  <span>{asignacion?.creadoPor.cargo}</span>
+              </div>
+            </div>
+            <div className="container-persona">
+              <div className="circle-img">
+              </div>
+              <div className="d-flex flex-column">
+                  <span className="fw-bold">{asignacion?.usuario_asignado.nombre_usuario}</span>
+                  <span>Desarrollador</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       <section className="section-comentarios">
         <div className="conment-container">
