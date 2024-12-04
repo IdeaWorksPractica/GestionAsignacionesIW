@@ -383,6 +383,7 @@ export const ModalRegisterAsignacion: React.FC<
                   <th>Nombre</th>
                   <th></th>
                   <th></th>
+                  
                 </tr>
               </thead>
               <tbody>
