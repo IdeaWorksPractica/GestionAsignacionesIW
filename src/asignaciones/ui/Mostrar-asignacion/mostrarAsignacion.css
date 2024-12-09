@@ -1,18 +1,24 @@
 .container-asignacion-seleccionada {
   height: 100vh;
-  padding: 2rem 5rem 2rem 5rem;
+  padding: 1.5rem 0rem 1.2rem 0rem;
   position: relative;
   font-size: 1.1rem;
 }
+.contenedor-global-1 {
+  padding: 0rem 4rem 0rem 4rem;
+  width: 100%;
+  height: 40%;
+}
 .title-content {
-  height: 3%;
+  height: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 .section-info {
-  height: 32%;
+  height: 90%;
+  width: 100%;
 }
 .firts-container {
   height: 18%;
@@ -22,30 +28,38 @@
 .second-container {
   height: 70%;
   display: flex;
+  justify-content: space-between;
 }
 .div-description {
   width: 75%;
   overflow-y: auto;
 }
 .div-container-persona {
-  width: 25%;
+  width: 20%;
   overflow-y: auto;
 }
 .container-persona {
   font-size: 0.8rem !important;
   display: flex;
   align-items: center;
-  height: 7vh;
+  height: auto;
+  max-height: 90%;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .circle-img {
-  background-color: #aa56a7;
+  background-color: #d9d9d9;
   height: 30px;
   width: 30px;
-  border-radius: 100%;
+  border-radius: 50%; /* Mantén el círculo */
   margin-right: 2px;
+  background-image: url('../../../../public/logoIW.png');
+  background-size: cover; /* Cambia 'contain' por 'cover' para que ocupe todo el espacio */
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-position: center; /* Asegúrate de centrar la imagen */
 }
+
 .fecha-inicio {
   color: #0098da;
 }
@@ -53,20 +67,46 @@
   color: #aa56a7;
 }
 .section-comentarios {
-  height: 55%;
+  height: 50%;
   width: 90%;
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  align-items: center !important;
-  padding-bottom: 1rem;
-  box-sizing: border-box;
+}
+.select-list-estado {
+  width: 35%;
+  border-radius: 9px;
+  border: none;
+  outline: none;
+  background-color: #d9d9d9;
+  font-size: 1rem;
+  padding: 8px;
 }
 
-.conment-container {
+/********ESTILOS DEL CONTENEDOR GLOBAL DE COMENTARIOS***********/
+.section-comentarios {
+  padding: 0rem 4rem 0rem 4rem;
   width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.titulo-comentarios {
+  height: 7%;
+  width: 100%;
+  background-color: #ebebeb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.titulo-comentarios > p {
+  font-weight: bold;
+  margin: 0;
+}
+.conment-container {
+  padding: 0rem 4rem 0rem 4rem;
+  height: 80%;
+  width: 100%;
+  overflow-y: auto;
 }
 .conmment-boss {
   background-color: #d9d9d9;
@@ -87,9 +127,8 @@
   justify-content: space-between;
   background-color: #d9d9d9;
   width: 70%;
-  height: auto;
+  height: 15%;
   border-radius: 15px;
-  padding: 0.4rem;
   margin-right: 1rem;
 }
 .input-conment > input {
@@ -100,14 +139,4 @@
 .input-conment > input:focus {
   border: none !important;
   outline: none !important;
-}
-
-.select-list-estado {
-    width: 35%;
-  border-radius: 9px;
-  border: none;
-  outline: none;
-  background-color: #d9d9d9;
-  font-size: 1rem;
-  padding: 10px;
 }

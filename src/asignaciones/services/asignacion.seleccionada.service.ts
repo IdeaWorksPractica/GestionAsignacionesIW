@@ -15,9 +15,6 @@ import {
   IAsignacion,
   IComentarioAsignacion,
 } from "../../shared/models/IAsignaciones";
-import { IUser } from "../../shared/models/IUsuario";
-
-import { getInfoUser } from "../../auth/services/auth.services";
 const asignacionesCollection = collection(db, "asignaciones");
 const asignacionesXUsuarioCollection = collection(db, "asignacionesXusuario");
 const comentariosAsignacionesCollection = collection(
@@ -30,9 +27,6 @@ async function obtenerAsignacionSeleccionada(
   id_asignacion_usuario: string
 ): Promise<IAsignacionSeleccionada> {
   try {
-    const usuario = await getInfoUser();
-    //console.log(usuario)
-    // Obtener la asignación por usuario
     const asignacionUsuarioSnapshot = await getDocs(
       query(
         asignacionesXUsuarioCollection,
@@ -82,15 +76,16 @@ const fechaFin =
       correo_electronico: usuarioCreador?.correoElectronico,
       cargo: usuarioCreador?.puestoTrabajo
     };
-
+    const usuarioAsig = await getUserById(asignacionUsuario.uid)
     const usuarioAsignado = {
-      nombre_usuario: usuario?.nombre,
-      uid: asignacionUsuario.uid,
-      correo_electronico: usuario?.correoElectronico,
+      nombre_usuario: usuarioAsig?.nombre,
+      uid: usuarioAsig?.uid,
+      correo_electronico: usuarioAsig?.correoElectronico,
+      puesto:usuarioAsig?.puestoTrabajo
     };
 
     // Construir el modelo `IAsignacionSeleccionada`
-    const asignacionSeleccionada: IAsignacionSeleccionada = {
+    const asignacionSeleccionada: any = {
       id_asignacion: asignacion.id,
       nombre_asignacion: asignacion.nombre,
       descripcion_asignacion: asignacion.descripcion,
@@ -101,7 +96,7 @@ const fechaFin =
       creadoPor,
       usuario_asignado: usuarioAsignado,
     };
-
+    console.log('Asignacion')
     return asignacionSeleccionada;
   } catch (error) {
     console.error("Error al obtener la asignación seleccionada:", error);

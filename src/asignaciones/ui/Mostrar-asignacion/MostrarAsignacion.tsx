@@ -63,6 +63,7 @@ export const MostrarAsignacion = () => {
 
   return (
     <section className="container-asignacion-seleccionada">
+      <section className="contenedor-global-1">
       <section className="title-content">
         <h4>Asignación: {asignacion?.nombre_asignacion}</h4>
       </section>
@@ -120,12 +121,17 @@ export const MostrarAsignacion = () => {
               </div>
               <div className="d-flex flex-column">
                   <span className="fw-bold">{asignacion?.usuario_asignado.nombre_usuario}</span>
-                  <span>Desarrollador</span>
+                  <span>{asignacion?.usuario_asignado.puesto}</span>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      </section>
+      <div className="titulo-comentarios">
+          <p>Comentarios</p>
+        </div>
       <section className="section-comentarios">
         <div className="conment-container">
           <div className="conmment-boss">
