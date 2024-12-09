@@ -177,11 +177,7 @@ export const Asignaciones = () => {
                       <div className="title-cards">
                         <span>{asignacion.nombre}</span>
                       </div>
-<<<<<<< Updated upstream
-                      <div className="info-card-container pt-md-0">
-=======
                       <div className="info-card-container">
->>>>>>> Stashed changes
                         <div className="mb-2">
                           <span className="fw-bold">Descripción:</span>
                           <br />
