@@ -53,7 +53,7 @@
   width: 30px;
   border-radius: 50%; /* Mantén el círculo */
   margin-right: 2px;
-  background-image: url('../../../../public/logoIW.png');
+  background-image: url("../../../../public/logoIW.png");
   background-size: cover; /* Cambia 'contain' por 'cover' para que ocupe todo el espacio */
   background-repeat: no-repeat;
   background-size: 80%;
@@ -88,6 +88,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: auto;
 }
 .titulo-comentarios {
   height: 7%;
@@ -104,36 +105,41 @@
 }
 .conment-container {
   padding: 0rem 4rem 0rem 4rem;
-  height: 80%;
+  height: 80%!important;
   width: 100%;
   overflow-y: auto;
 }
 .conmment-boss {
-  background-color: #d9d9d9;
   display: flex;
   flex-direction: column;
   width: 45%;
   height: auto;
   padding: 0.5rem;
-  border-radius: 10px;
   margin-bottom: 1.5rem;
 }
+.container-comment-created {
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #d9d9d9;
+}
 .employed {
-  position: relative;
-  right: 0 !important;
+  margin-left: auto;
+}
+.employed >div> .container-persona{
+  justify-content: flex-end!important;
 }
 .input-conment {
   display: flex;
   justify-content: space-between;
   background-color: #d9d9d9;
-  width: 70%;
+  width: 100%;
   height: 15%;
   border-radius: 15px;
-  margin-right: 1rem;
+  padding: 5px 10px 5px 10px;
 }
 .input-conment > input {
   border: none;
-  width: 95%;
+  width: 90%;
   background-color: transparent;
 }
 .input-conment > input:focus {
