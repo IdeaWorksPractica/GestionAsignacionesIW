@@ -121,6 +121,10 @@ const getComentariosAgrupadosPorFecha = async (
       const grupoExistente = acc.find((grupo) => grupo.fecha === fechaStr);
       if (grupoExistente) {
         grupoExistente.comentarios.push(comentarioSimplificado);
+        // Ordenamos los comentarios por hora
+        grupoExistente.comentarios.sort((a, b) =>
+          a.hora.localeCompare(b.hora)
+        );
       } else {
         // Si no existe, creamos un nuevo grupo
         acc.push({
@@ -133,10 +137,11 @@ const getComentariosAgrupadosPorFecha = async (
 
     return agrupados;
   } catch (error) {
-    console.error("Error al obtener comentarios agrupados:", error);
-    throw new Error("Error al obtener comentarios agrupados");
+    console.error("Error obteniendo comentarios agrupados:", error);
+    throw error;
   }
 };
+
 export {
   getComentariosByAsignacion,
   createComentario,
