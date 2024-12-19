@@ -81,7 +81,7 @@ const fechaFin =
       nombre_usuario: usuarioAsig?.nombre,
       uid: usuarioAsig?.uid,
       correo_electronico: usuarioAsig?.correoElectronico,
-      puesto:usuarioAsig?.puestoTrabajo
+      cargo:usuarioAsig?.puestoTrabajo
     };
 
     // Construir el modelo `IAsignacionSeleccionada`

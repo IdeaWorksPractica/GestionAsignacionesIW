@@ -38,7 +38,7 @@ interface Asignacion {
   };
   usuario_asignado: {
     nombre_usuario: string;
-    puesto: string;
+    cargo: string;
   };
 }
 
@@ -53,12 +53,13 @@ export const MostrarAsignacion = () => {
   const comentariosEndRef = useRef<HTMLDivElement>(null);
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
-  const [asignacion, setAsignacion] = useState<Asignacion | null>(null);
+  const [asignacion, setAsignacion] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [pendingChange, setPendingChange] = useState<string | null>(null);
   const [comentarios, setComentarios] = useState<GrupoComentarios[]>([]);
   const [newComment, setNewComment] = useState<string>("");
-  const [userLogged, setLogged] = useState<Usuario | null>(null);
+  const [userLogged, setLogged] = useState<any | null>(null);
+  const [users, setUsers] = useState<any>([]);
 
   const scrollToBottom = () => {
     comentariosEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,6 +71,8 @@ export const MostrarAsignacion = () => {
       const user = await getInfoUser();
       const asignacionDetalle = await obtenerAsignacionSeleccionada(id);
       await getComments();
+      console.log(asignacionDetalle)
+      setUsers([asignacionDetalle.creadoPor,asignacionDetalle.usuario_asignado ])
       setAsignacion(asignacionDetalle);
       setLogged(user);
     } catch (error) {
@@ -167,7 +170,21 @@ export const MostrarAsignacion = () => {
     }
   };
 
-  return (
+  return (<>
+
+{loading ? (
+        <Spin
+          tip="Cargando..."
+          size="large"
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        />
+      )  :(
     <section className="container-asignacion-seleccionada">
       {/* Contenedor principal de la asignación */}
       <section className="contenedor-global-1">
@@ -230,7 +247,7 @@ export const MostrarAsignacion = () => {
                   <span className="fw-bold">
                     {asignacion?.usuario_asignado.nombre_usuario}
                   </span>
-                  <span>{asignacion?.usuario_asignado.puesto}</span>
+                  <span>{asignacion?.usuario_asignado.cargo}</span>
                 </div>
               </div>
             </div>
@@ -266,9 +283,11 @@ export const MostrarAsignacion = () => {
                         <span className="fw-bold">
                           {comentario.uid_usuario === userLogged?.uid
                             ? "Tú"
-                            : ""}
+                            : users.find((user: { uid: string; }) => user.uid === comentario.uid_usuario)?.nombre_usuario}
                         </span>
-                        <span>{userLogged?.puestoTrabajoDetalle.nombre}</span>
+                        <span>{comentario.uid_usuario === userLogged?.uid
+                          ?userLogged?.puestoTrabajoDetalle.nombre
+                        :users.find((user: { uid: string; }) => user.uid === comentario.uid_usuario)?.cargo}</span>
                       </div>
                     </div>
                   </div>
@@ -314,7 +333,9 @@ export const MostrarAsignacion = () => {
         </button>
       </div>
       {contextHolder}
-    </section>
+    </section>)}
+  </>
+   
   );
   
   
