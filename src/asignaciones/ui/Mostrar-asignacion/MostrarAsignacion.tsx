@@ -2,15 +2,10 @@ import {
   useState,
   useEffect,
   useRef,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
 } from "react";
 import './mostrarAsignacion.css'
 import { useParams } from "react-router-dom";
-import { obtenerAsignacionSeleccionada } from "../../services/asignacion.seleccionada.service";
+import { obtenerAsignacionSeleccionada, actualizarEstadoAsignacionUsuario } from "../../services/asignacion.seleccionada.service";
 import {
   getComentariosAgrupadosPorFecha,
   createComentario,
@@ -98,9 +93,10 @@ export const MostrarAsignacion = () => {
     scrollToBottom();
   }, [comentarios]);
 
-  const handleConfirmChange = () => {
+  const handleConfirmChange = async () => {
     if (pendingChange) {
       setAsignacion((prev) => (prev ? { ...prev, estado: pendingChange } : null));
+      await actualizarEstadoAsignacionUsuario(asignacion?.id_asignacion_usuario, pendingChange)
       setPendingChange(null);
     }
   };
@@ -204,9 +200,9 @@ export const MostrarAsignacion = () => {
                   value={asignacion?.estado} // Vincula el valor con asignacion.estado
                   onChange={(e) => setPendingChange(e.target.value)} // Manejar cambio pendiente
                 >
-                  <option value="sin-iniciar">Sin iniciar</option>
-                  <option value="en-proceso">En Proceso</option>
-                  <option value="finalizado">Finalizado</option>
+                  <option value="Sin Iniciar">Sin iniciar</option>
+                  <option value="En Proceso">En Proceso</option>
+                  <option value="Terminada">Finalizado</option>
                 </select>
               </Popconfirm>
             </div>
