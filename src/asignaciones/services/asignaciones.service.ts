@@ -286,7 +286,7 @@ async function obtenerComentarios(
   try {
     const snapshot = await getDocs(comentariosAsignacionesCollection);
     return snapshot.docs
-      .map((doc) => doc.data() as IComentarioAsignacion)
+      .map((doc) => doc.data() as any)
       .filter((comentario) => comentario.id_asignacion === id_asignacion);
   } catch (error) {
     console.error("Error al obtener comentarios:", error);

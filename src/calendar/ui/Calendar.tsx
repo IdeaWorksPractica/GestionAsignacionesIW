@@ -45,7 +45,7 @@ const Calendar: React.FC = () => {
       const jefeAsignaciones = await getAsignacionesCreadasPorJefeConUsuarios(user.uid);
       setAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
       eventos(jefeAsignaciones);
-    } else {
+    } else if (user) {
       const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
       console.log('Asignaciones del usuario: ', usuarioAsignaciones)
       setAsignaciones(usuarioAsignaciones);

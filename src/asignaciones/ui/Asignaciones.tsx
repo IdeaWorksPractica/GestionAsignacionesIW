@@ -43,9 +43,11 @@ export const Asignaciones = () => {
       setAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
       setFilteredAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
     } else {
-      const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
-      setAsignaciones(usuarioAsignaciones);
-      setFilteredAsignaciones(usuarioAsignaciones);
+      if (user) {
+        const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
+        setAsignaciones(usuarioAsignaciones);
+        setFilteredAsignaciones(usuarioAsignaciones);
+      }
     }
 
     setLoading(false);
