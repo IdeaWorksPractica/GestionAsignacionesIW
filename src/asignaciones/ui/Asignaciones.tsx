@@ -42,7 +42,6 @@ export const Asignaciones = () => {
       const jefeAsignaciones = await getAsignacionesCreadasPorJefeConUsuarios(user.uid);
       setAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
       setFilteredAsignaciones(jefeAsignaciones.map(({ asignacion }) => asignacion));
-      console.log(jefeAsignaciones);
     } else {
       const usuarioAsignaciones = await obtenerAsignacionesPorUsuario(user.uid);
       setAsignaciones(usuarioAsignaciones);

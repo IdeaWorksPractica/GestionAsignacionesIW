@@ -12,7 +12,7 @@ import { IComentarioAsignacion } from "../../shared/models/IAsignaciones";
 // Referencia a la colección de comentarios
 const comentariosAsignacionesCollection = collection(
   db,
-  "comentariosAsignaciones"
+  "comentariosAsignaciones" 
 );
 
 // Función para obtener comentarios por `id_asignacionXusuario`

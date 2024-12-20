@@ -25,37 +25,13 @@ interface GrupoComentarios {
   comentarios: Comentario[];
 }
 
-interface Asignacion {
-  id_asignacion_usuario: string;
-  nombre_asignacion: string;
-  fechaInicio: string;
-  fechaFin: string;
-  estado: string;
-  descripcion_asignacion: string;
-  creadoPor: {
-    nombre_usuario: string;
-    cargo: string;
-  };
-  usuario_asignado: {
-    nombre_usuario: string;
-    cargo: string;
-  };
-}
-
-interface Usuario {
-  uid: string;
-  puestoTrabajoDetalle: {
-    nombre: string;
-  };
-}
-
 export const MostrarAsignacion = () => {
   const comentariosEndRef = useRef<HTMLDivElement>(null);
   const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams();
   const [asignacion, setAsignacion] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [pendingChange, setPendingChange] = useState<string | null>(null);
+  const [pendingChange, setPendingChange] = useState<"Sin Iniciar" | "En Proceso" | "Terminada" | null>(null);
   const [comentarios, setComentarios] = useState<GrupoComentarios[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const [userLogged, setLogged] = useState<any | null>(null);
@@ -68,13 +44,16 @@ export const MostrarAsignacion = () => {
   const getData = async () => {
     setLoading(true);
     try {
-      const user = await getInfoUser();
-      const asignacionDetalle = await obtenerAsignacionSeleccionada(id);
-      await getComments();
-      console.log(asignacionDetalle)
-      setUsers([asignacionDetalle.creadoPor,asignacionDetalle.usuario_asignado ])
-      setAsignacion(asignacionDetalle);
-      setLogged(user);
+      if (id) {
+        const asignacionDetalle = await obtenerAsignacionSeleccionada(id);
+        setUsers([asignacionDetalle.creadoPor,asignacionDetalle.usuario_asignado ])
+        setAsignacion(asignacionDetalle);
+       const user = await getInfoUser();
+       setLogged(user);
+       await getComments();
+      } else {
+        throw new Error("ID de asignación no definido");
+      }
     } catch (error) {
       console.error("Error al obtener la asignación:", error);
     } finally {
@@ -98,7 +77,7 @@ export const MostrarAsignacion = () => {
 
   const handleConfirmChange = async () => {
     if (pendingChange) {
-      setAsignacion((prev) => (prev ? { ...prev, estado: pendingChange } : null));
+      setAsignacion((prev: any) => (prev ? { ...prev, estado: pendingChange } : null));
       await actualizarEstadoAsignacionUsuario(asignacion?.id_asignacion_usuario, pendingChange)
       setPendingChange(null);
     }
@@ -123,44 +102,9 @@ export const MostrarAsignacion = () => {
         contenido: newComment,
       };
 
-      const comentarioCreado = await createComentario(nuevoComentario);
-
-      setComentarios((prevComentarios) => {
-        const fechaHoy = new Date().toLocaleDateString("es-ES", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        });
-        const horaActual = new Date().toLocaleTimeString("es-ES", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        });
-
-        const nuevoComentarioSimplificado: Comentario = {
-          id: comentarioCreado.id,
-          contenido: newComment,
-          uid_usuario: userLogged!.uid,
-          hora: horaActual,
-        };
-
-        const grupoExistente = prevComentarios.find(
-          (grupo) => grupo.fecha === fechaHoy
-        );
-
-        if (grupoExistente) {
-          grupoExistente.comentarios.push(nuevoComentarioSimplificado);
-          grupoExistente.comentarios.sort((a, b) =>
-            a.hora.localeCompare(b.hora)
-          );
-          return [...prevComentarios];
-        } else {
-          return [
-            ...prevComentarios,
-            { fecha: fechaHoy, comentarios: [nuevoComentarioSimplificado] },
-          ];
-        }
-      });
+      await createComentario(nuevoComentario);
+      await getComments();
+      
 
       setNewComment("");
       messageApi.success("Comentario registrado con éxito");
@@ -215,7 +159,7 @@ export const MostrarAsignacion = () => {
                 <select
                   className="select-list-estado"
                   value={asignacion?.estado} // Vincula el valor con asignacion.estado
-                  onChange={(e) => setPendingChange(e.target.value)} // Manejar cambio pendiente
+                  onChange={(e) => setPendingChange(e.target.value as "Sin Iniciar" | "En Proceso" | "Terminada")} // Manejar cambio pendiente
                 >
                   <option value="Sin Iniciar">Sin iniciar</option>
                   <option value="En Proceso">En Proceso</option>

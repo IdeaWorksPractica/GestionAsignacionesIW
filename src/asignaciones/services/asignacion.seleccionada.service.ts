@@ -96,7 +96,7 @@ const fechaFin =
       creadoPor,
       usuario_asignado: usuarioAsignado,
     };
-    console.log('Asignacion')
+  //  console.log('Asignacion')
     return asignacionSeleccionada;
   } catch (error) {
     console.error("Error al obtener la asignación seleccionada:", error);
@@ -136,7 +136,7 @@ async function actualizarEstadoAsignacionUsuario(
       id_asignacion_usuario
     );
     await updateDoc(asignacionUsuarioRef, { estado: nuevoEstado });
-    console.log(`Estado actualizado a: ${nuevoEstado}`);
+    //console.log(`Estado actualizado a: ${nuevoEstado}`);
   } catch (error) {
     console.error("Error al actualizar el estado de la asignación:", error);
     throw error;

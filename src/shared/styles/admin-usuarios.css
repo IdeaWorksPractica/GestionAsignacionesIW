@@ -20,13 +20,14 @@
   align-items: center;
 }
 .title-cards > span {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #ffffff;
 }
 .info-card-container {
+  font-size: 0.9rem;
   margin-bottom: 1rem;
   position: relative;
-  padding: 1rem;
+  padding: 0.9rem;
 }
 .div-icon-edit {
   padding: 1rem;
