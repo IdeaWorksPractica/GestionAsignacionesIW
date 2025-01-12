@@ -158,7 +158,11 @@ async function registerUser(
       password
     );
     const userId = userCredential.user.uid;
-    const userLogged = JSON.parse(localStorage.getItem('userCredentials'));
+    const userCredentials = localStorage.getItem('userCredentials');
+    if (!userCredentials) {
+      throw new Error("User credentials not found in local storage");
+    }
+    const userLogged = JSON.parse(userCredentials);
     await signInWithEmailAndPassword(auth, userLogged.email, userLogged.password)
     const usuarioRef = doc(db, "usuarios", userId);
     await setDoc(usuarioRef, {
